@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文本加密工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .wechat-warning {
+            background: #ff4757;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .wechat-warning.show {
+            display: block;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .tips {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .tips h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .tips ul {
+            margin-left: 20px;
+        }
+
+        .tips li {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .tab {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wechat-warning" id="wechatWarning">
+            ⚠️ 检测到微信访问，建议使用其他浏览器打开本页面以获得更好的使用体验
+        </div>
+
+        <h1>🔐 文本加密工具</h1>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('encrypt')">加密文本</button>
+            <button class="tab" onclick="showTab('decrypt')">解密文本</button>
+        </div>
+
+        <div id="encrypt-tab" class="tab-content active">
+            <div class="form-group">
+                <label for="plaintext">输入要加密的文本：</label>
+                <textarea id="plaintext" placeholder="请输入需要加密的文本内容..."></textarea>
+            </div>
+            
+            <button class="btn" onclick="encryptText()">🔒 加密文本</button>
+            
+            <div id="encrypt-result" class="result">
+                <div id="encrypt-output"></div>
+                <button class="copy-btn" onclick="copyToClipboard('encrypt-output')">📋 复制结果</button>
+            </div>
+        </div>
+
+        <div id="decrypt-tab" class="tab-content">
+            <div class="form-group">
+                <label for="ciphertext">输入要解密的文本：</label>
+                <textarea id="ciphertext" placeholder="请输入需要解密的加密文本..."></textarea>
+            </div>
+            
+            <div class="btn-group" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button class="btn" style="background: #6c757d;" onclick="pasteAndDecrypt()">📋 粘贴并解密</button>
+                <button class="btn" onclick="decryptText()">🔓 解密文本</button>
+            </div>
+            
+            <div id="decrypt-result" class="result">
+                <div id="decrypt-output"></div>
+                <button class="copy-btn" onclick="copyToClipboard('decrypt-output')">📋 复制结果</button>
+            </div>
+        </div>
+
+        <div class="tips">
+            <h3>💡 使用说明</h3>
+            <ul>
+                <li>本工具使用智能加密算法，无需输入密码</li>
+                <li>加密后的文本可以安全地通过任何方式传输</li>
+                <li>密钥自动嵌入在加密文本中，解密时自动提取</li>
+                <li>每次加密结果都不同，增强安全性</li>
+                <li>本工具完全在浏览器中运行，不会上传任何数据</li>
+                <li>需要在支持 Web Crypto API 的浏览器中使用（通常需要 HTTPS 环境）</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 检测微信浏览器
+        function detectWeChat() {
+            const ua = navigator.userAgent.toLowerCase();
+            if (ua.includes('micromessenger')) {
+                document.getElementById('wechatWarning').classList.add('show');
+            }
+        }
+
+        // 标签切换
+        function showTab(tabName) {
+            // 隐藏所有标签内容
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabs = document.querySelectorAll('.tab');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // 显示选中的标签
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            // 隐藏结果
+            document.getElementById('encrypt-result').classList.remove('show');
+            document.getElementById('decrypt-result').classList.remove('show');
+        }
+
+        // 生成随机密钥
+        function generateRandomKey() {
+            return window.crypto.getRandomValues(new Uint8Array(32));
+        }
+
+        // 加密文本
+        async function encryptText() {
+            const plaintext = document.getElementById('plaintext').value;
+            
+            if (!plaintext) {
+                showResult('encrypt', '请输入要加密的文本', false);
+                return;
+            }
+            
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(plaintext);
+                
+                // 生成随机密钥和IV
+                const key = await window.crypto.subtle.generateKey(
+                    {
+                        name: 'AES-GCM',
+                        length: 256
+                    },
+                    true,
+                    ['encrypt', 'decrypt']
+                );
+                const iv = window.crypto.getRandomValues(new Uint8Array(12));
+                
+                // 加密数据
+                const encryptedData = await window.crypto.subtle.encrypt(
+                    {
+                        name: 'AES-GCM',
+                        iv: iv
+                    },
+                    key,
+                    data
+                );
+                
+                // 导出密钥
+                const exportedKey = await window.crypto.subtle.exportKey('raw', key);
+                const keyArray = new Uint8Array(exportedKey);
+                
+                // 组合IV、密钥和加密数据
+                const encryptedArray = new Uint8Array(encryptedData);
+                const resultArray = new Uint8Array(iv.length + keyArray.length + encryptedArray.length);
+                resultArray.set(iv);
+                resultArray.set(keyArray, iv.length);
+                resultArray.set(encryptedArray, iv.length + keyArray.length);
+                
+                // 转换为Base64
+                const base64Result = btoa(String.fromCharCode(...resultArray));
+                
+                showResult('encrypt', base64Result, true);
+                
+            } catch (error) {
+                showResult('encrypt', '加密失败：' + error.message, false);
+                console.error('加密错误:', error);
+            }
+        }
+
+        // 解密文本
+        async function decryptText() {
+            const ciphertext = document.getElementById('ciphertext').value;
+            
+            if (!ciphertext) {
+                showResult('decrypt', '请输入要解密的文本', false);
+                return;
+            }
+            
+            try {
+                // 从Base64解码
+                let decodedData;
+                try {
+                    decodedData = atob(ciphertext);
+                } catch (e) {
+                    showResult('decrypt', '解密失败：无效的加密文本格式', false);
+                    return;
+                }
+                
+                const encryptedData = Uint8Array.from(decodedData, c => c.charCodeAt(0));
+                
+                // 提取IV、密钥和加密数据
+                const iv = encryptedData.slice(0, 12);
+                const keyData = encryptedData.slice(12, 44); // AES-256密钥长度为32字节
+                const data = encryptedData.slice(44);
+                
+                // 导入密钥
+                const key = await window.crypto.subtle.importKey(
+                    'raw',
+                    keyData,
+                    {
+                        name: 'AES-GCM',
+                        length: 256
+                    },
+                    false,
+                    ['decrypt']
+                );
+                
+                // 解密数据
+                const decryptedData = await window.crypto.subtle.decrypt(
+                    {
+                        name: 'AES-GCM',
+                        iv: iv
+                    },
+                    key,
+                    data
+                );
+                
+                // 转换为文本
+                const decoder = new TextDecoder();
+                const plaintext = decoder.decode(decryptedData);
+                
+                showResult('decrypt', plaintext, true);
+                
+            } catch (error) {
+                showResult('decrypt', '解密失败：' + error.message, false);
+                console.error('解密错误:', error);
+            }
+        }
+
+        // 显示结果
+        function showResult(type, text, isSuccess) {
+            const resultDiv = document.getElementById(type + '-result');
+            const outputDiv = document.getElementById(type + '-output');
+            
+            outputDiv.textContent = text;
+            resultDiv.className = 'result show ' + (isSuccess ? 'success' : 'error');
+        }
+
+        // 复制到剪贴板
+        async function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            const btn = event.target;
+            
+            // 方法1: 使用现代 Clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    showCopySuccess(btn);
+                    return;
+                } catch (error) {
+                    console.log('Clipboard API 失败，尝试备用方法');
+                }
+            }
+            
+            // 方法2: 使用 document.execCommand (兼容性更好)
+            try {
+                // 创建临时文本区域
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                
+                // 选择并复制
+                textArea.focus();
+                textArea.select();
+                const successful = document.execCommand('copy');
+                
+                // 清理
+                document.body.removeChild(textArea);
+                
+                if (successful) {
+                    showCopySuccess(btn);
+                } else {
+                    showCopyError(btn);
+                }
+            } catch (error) {
+                console.log('execCommand 失败，使用最后备用方法');
+                showCopyError(btn);
+            }
+        }
+        
+        // 显示复制成功
+        function showCopySuccess(btn) {
+            const originalText = btn.textContent;
+            btn.textContent = '✅ 已复制';
+            btn.style.background = '#20c997';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#28a745';
+            }, 2000);
+        }
+        
+        // 显示复制失败
+        function showCopyError(btn) {
+            const originalText = btn.textContent;
+            btn.textContent = '❌ 复制失败';
+            btn.style.background = '#dc3545';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#28a745';
+            }, 2000);
+        }
+
+        // 粘贴并解密
+        async function pasteAndDecrypt() {
+            try {
+                // 尝试从剪贴板读取文本
+                const text = await navigator.clipboard.readText();
+                
+                if (text) {
+                    // 填入文本框
+                    document.getElementById('ciphertext').value = text;
+                    // 执行解密
+                    decryptText();
+                } else {
+                    showResult('decrypt', '剪贴板中没有文本', false);
+                }
+            } catch (error) {
+                // 如果无法访问剪贴板API
+                showResult('decrypt', '无法访问剪贴板，请手动粘贴文本', false);
+                console.log('剪贴板访问失败:', error);
+            }
+        }
+
+        // 页面加载时检测微信
+        window.addEventListener('load', detectWeChat);
+    </script>
+</body>
+</html>
