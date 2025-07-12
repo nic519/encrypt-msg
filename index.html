@@ -45,6 +45,14 @@
             display: block;
         }
 
+        .main-content {
+            display: block;
+        }
+
+        .main-content.hide {
+            display: none;
+        }
+
         h1 {
             text-align: center;
             color: #333;
@@ -141,6 +149,22 @@
             cursor: not-allowed;
         }
 
+        .primary-btn {
+            background: #28a745;
+        }
+
+        .primary-btn:hover {
+            background: #218838;
+        }
+
+        .secondary-btn {
+            background: #6c757d;
+        }
+
+        .secondary-btn:hover {
+            background: #5a6268;
+        }
+
         .result {
             margin-top: 20px;
             padding: 20px;
@@ -193,11 +217,6 @@
             border-left: 4px solid #2196f3;
         }
 
-        .tips h3 {
-            color: #1976d2;
-            margin-bottom: 10px;
-        }
-
         .tips ul {
             margin-left: 20px;
         }
@@ -227,57 +246,57 @@
 <body>
     <div class="container">
         <div class="wechat-warning" id="wechatWarning">
-            ⚠️ 检测到微信访问，建议使用其他浏览器打开本页面以获得更好的使用体验
+            ⚠️ 检测到微信访问，请使用浏览器打开本页面
         </div>
 
-        <h1>🔐 文本加密工具</h1>
-        
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('encrypt')">加密文本</button>
-            <button class="tab" onclick="showTab('decrypt')">解密文本</button>
-        </div>
+        <div class="main-content" id="mainContent">
+            <h1>🔐 文本加密工具</h1>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('encrypt')">加密文本</button>
+                <button class="tab" onclick="showTab('decrypt')">解密文本</button>
+            </div>
 
-        <div id="encrypt-tab" class="tab-content active">
-            <div class="form-group">
-                <label for="plaintext">输入要加密的文本：</label>
-                <textarea id="plaintext" placeholder="请输入需要加密的文本内容..."></textarea>
+            <div id="encrypt-tab" class="tab-content active">
+                <div class="form-group">
+                    <label for="plaintext">输入要加密的文本：</label>
+                    <textarea id="plaintext" placeholder="请输入需要加密的文本内容..."></textarea>
+                </div>
+                
+                <div class="btn-group" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn secondary-btn" onclick="pasteAndEncrypt()">📋 粘贴并加密</button>
+                    <button class="btn" onclick="encryptText()">🔒 加密文本</button>
+                </div>
+                
+                <div id="encrypt-result" class="result">
+                    <div id="encrypt-output"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('encrypt-output')">📋 复制结果</button>
+                </div>
             </div>
-            
-            <button class="btn" onclick="encryptText()">🔒 加密文本</button>
-            
-            <div id="encrypt-result" class="result">
-                <div id="encrypt-output"></div>
-                <button class="copy-btn" onclick="copyToClipboard('encrypt-output')">📋 复制结果</button>
-            </div>
-        </div>
 
-        <div id="decrypt-tab" class="tab-content">
-            <div class="form-group">
-                <label for="ciphertext">输入要解密的文本：</label>
-                <textarea id="ciphertext" placeholder="请输入需要解密的加密文本..."></textarea>
+            <div id="decrypt-tab" class="tab-content">
+                <div class="form-group">
+                    <label for="ciphertext">输入要解密的文本：</label>
+                    <textarea id="ciphertext" placeholder="请输入需要解密的加密文本..."></textarea>
+                </div>
+                
+                <div class="btn-group" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn primary-btn" onclick="pasteAndDecrypt()">📋 粘贴并解密</button>
+                    <button class="btn secondary-btn" onclick="decryptText()">🔓 解密文本</button>
+                </div>
+                
+                <div id="decrypt-result" class="result">
+                    <div id="decrypt-output"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('decrypt-output')">📋 复制结果</button>
+                </div>
             </div>
-            
-            <div class="btn-group" style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <button class="btn" style="background: #6c757d;" onclick="pasteAndDecrypt()">📋 粘贴并解密</button>
-                <button class="btn" onclick="decryptText()">🔓 解密文本</button>
-            </div>
-            
-            <div id="decrypt-result" class="result">
-                <div id="decrypt-output"></div>
-                <button class="copy-btn" onclick="copyToClipboard('decrypt-output')">📋 复制结果</button>
-            </div>
-        </div>
 
-        <div class="tips">
-            <h3>💡 使用说明</h3>
-            <ul>
-                <li>本工具使用智能加密算法，无需输入密码</li>
-                <li>加密后的文本可以安全地通过任何方式传输</li>
-                <li>密钥自动嵌入在加密文本中，解密时自动提取</li>
-                <li>每次加密结果都不同，增强安全性</li>
-                <li>本工具完全在浏览器中运行，不会上传任何数据</li>
-                <li>需要在支持 Web Crypto API 的浏览器中使用（通常需要 HTTPS 环境）</li>
-            </ul>
+            <div class="tips">
+                <ul>
+                    <li>本工具完全在浏览器中运行，不会上传任何数据</li>
+                    <li>每次加密结果都不同，增强安全性</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -287,6 +306,7 @@
             const ua = navigator.userAgent.toLowerCase();
             if (ua.includes('micromessenger')) {
                 document.getElementById('wechatWarning').classList.add('show');
+                document.getElementById('mainContent').classList.add('hide');
             }
         }
 
@@ -311,6 +331,27 @@
         // 生成随机密钥
         function generateRandomKey() {
             return window.crypto.getRandomValues(new Uint8Array(32));
+        }
+
+        // 粘贴并加密
+        async function pasteAndEncrypt() {
+            try {
+                // 尝试从剪贴板读取文本
+                const text = await navigator.clipboard.readText();
+                
+                if (text) {
+                    // 填入文本框
+                    document.getElementById('plaintext').value = text;
+                    // 执行加密
+                    encryptText();
+                } else {
+                    showResult('encrypt', '剪贴板中没有文本', false);
+                }
+            } catch (error) {
+                // 如果无法访问剪贴板API
+                showResult('encrypt', '无法访问剪贴板，请手动粘贴文本', false);
+                console.log('剪贴板访问失败:', error);
+            }
         }
 
         // 加密文本
@@ -366,6 +407,27 @@
             } catch (error) {
                 showResult('encrypt', '加密失败：' + error.message, false);
                 console.error('加密错误:', error);
+            }
+        }
+
+        // 粘贴并解密
+        async function pasteAndDecrypt() {
+            try {
+                // 尝试从剪贴板读取文本
+                const text = await navigator.clipboard.readText();
+                
+                if (text) {
+                    // 填入文本框
+                    document.getElementById('ciphertext').value = text;
+                    // 执行解密
+                    decryptText();
+                } else {
+                    showResult('decrypt', '剪贴板中没有文本', false);
+                }
+            } catch (error) {
+                // 如果无法访问剪贴板API
+                showResult('decrypt', '无法访问剪贴板，请手动粘贴文本', false);
+                console.log('剪贴板访问失败:', error);
             }
         }
 
@@ -506,27 +568,6 @@
                 btn.textContent = originalText;
                 btn.style.background = '#28a745';
             }, 2000);
-        }
-
-        // 粘贴并解密
-        async function pasteAndDecrypt() {
-            try {
-                // 尝试从剪贴板读取文本
-                const text = await navigator.clipboard.readText();
-                
-                if (text) {
-                    // 填入文本框
-                    document.getElementById('ciphertext').value = text;
-                    // 执行解密
-                    decryptText();
-                } else {
-                    showResult('decrypt', '剪贴板中没有文本', false);
-                }
-            } catch (error) {
-                // 如果无法访问剪贴板API
-                showResult('decrypt', '无法访问剪贴板，请手动粘贴文本', false);
-                console.log('剪贴板访问失败:', error);
-            }
         }
 
         // 页面加载时检测微信
