@@ -15,9 +15,6 @@
             font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
 
@@ -28,6 +25,7 @@
             padding: 40px;
             max-width: 600px;
             width: 100%;
+            margin: 20px auto;
         }
 
         .wechat-warning {
@@ -98,6 +96,7 @@
 
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         label {
@@ -116,6 +115,7 @@
             font-family: inherit;
             resize: vertical;
             transition: border-color 0.3s ease;
+            padding-right: 40px; /* 为清除按钮留出空间 */
         }
 
         textarea:focus {
@@ -125,6 +125,23 @@
 
         textarea {
             min-height: 120px;
+        }
+
+        .clear-btn {
+            position: absolute;
+            right: 10px;
+            top: 40px;
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 2;
+        }
+
+        .clear-btn:hover {
+            color: #ff4757;
         }
 
         .btn {
@@ -176,6 +193,7 @@
             font-size: 14px;
             line-height: 1.5;
             display: none;
+            position: relative;
         }
 
         .result.show {
@@ -194,19 +212,43 @@
             color: #721c24;
         }
 
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .result-title {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .copy-btn {
-            margin-top: 10px;
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: #28a745;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .copy-btn:hover {
             background: #218838;
+        }
+
+        .result-content {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px 0;
         }
 
         .tips {
@@ -224,12 +266,19 @@
         .tips li {
             margin-bottom: 5px;
             color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .emoji {
+            font-size: 1.2em;
         }
 
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
-                margin: 10px;
+                margin: 10px auto;
             }
             
             h1 {
@@ -253,14 +302,15 @@
             <h1>🔐 文本加密工具</h1>
             
             <div class="tabs">
-                <button class="tab active" onclick="showTab('encrypt')">加密文本</button>
-                <button class="tab" onclick="showTab('decrypt')">解密文本</button>
+                <button class="tab active" onclick="showTab('encrypt')">🔒 加密文本</button>
+                <button class="tab" onclick="showTab('decrypt')">🔓 解密文本</button>
             </div>
 
             <div id="encrypt-tab" class="tab-content active">
                 <div class="form-group">
-                    <label for="plaintext">输入要加密的文本：</label>
+                    <label for="plaintext">✏️ 输入要加密的文本：</label>
                     <textarea id="plaintext" placeholder="请输入需要加密的文本内容..."></textarea>
+                    <button class="clear-btn" onclick="clearText('plaintext')" title="清空文本">✖️</button>
                 </div>
                 
                 <div class="btn-group" style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -269,15 +319,21 @@
                 </div>
                 
                 <div id="encrypt-result" class="result">
-                    <div id="encrypt-output"></div>
-                    <button class="copy-btn" onclick="copyToClipboard('encrypt-output')">📋 复制结果</button>
+                    <div class="result-header">
+                        <div class="result-title">🔐 加密结果</div>
+                        <button class="copy-btn" onclick="copyToClipboard('encrypt-output-text')">📋 复制结果</button>
+                    </div>
+                    <div class="result-content" id="encrypt-output">
+                        <span id="encrypt-output-text"></span>
+                    </div>
                 </div>
             </div>
 
             <div id="decrypt-tab" class="tab-content">
                 <div class="form-group">
-                    <label for="ciphertext">输入要解密的文本：</label>
+                    <label for="ciphertext">📝 输入要解密的文本：</label>
                     <textarea id="ciphertext" placeholder="请输入需要解密的加密文本..."></textarea>
+                    <button class="clear-btn" onclick="clearText('ciphertext')" title="清空文本">✖️</button>
                 </div>
                 
                 <div class="btn-group" style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -286,15 +342,20 @@
                 </div>
                 
                 <div id="decrypt-result" class="result">
-                    <div id="decrypt-output"></div>
-                    <button class="copy-btn" onclick="copyToClipboard('decrypt-output')">📋 复制结果</button>
+                    <div class="result-header">
+                        <div class="result-title">🔓 解密结果</div>
+                        <button class="copy-btn" onclick="copyToClipboard('decrypt-output-text')">📋 复制结果</button>
+                    </div>
+                    <div class="result-content" id="decrypt-output">
+                        <span id="decrypt-output-text"></span>
+                    </div>
                 </div>
             </div>
 
             <div class="tips">
                 <ul>
-                    <li>本工具完全在浏览器中运行，不会上传任何数据</li>
-                    <li>每次加密结果都不同，增强安全性</li>
+                    <li><span class="emoji">🛡️</span> 本工具完全在浏览器中运行，不会上传任何数据</li>
+                    <li><span class="emoji">🔄</span> 每次加密结果都不同，增强安全性</li>
                 </ul>
             </div>
         </div>
@@ -308,6 +369,11 @@
                 document.getElementById('wechatWarning').classList.add('show');
                 document.getElementById('mainContent').classList.add('hide');
             }
+        }
+
+        // 清空文本
+        function clearText(elementId) {
+            document.getElementById(elementId).value = '';
         }
 
         // 标签切换
@@ -494,7 +560,7 @@
         // 显示结果
         function showResult(type, text, isSuccess) {
             const resultDiv = document.getElementById(type + '-result');
-            const outputDiv = document.getElementById(type + '-output');
+            const outputDiv = document.getElementById(type + '-output-text');
             
             outputDiv.textContent = text;
             resultDiv.className = 'result show ' + (isSuccess ? 'success' : 'error');
