@@ -103,7 +103,7 @@
 
 /* 提示区域 */
 .tips {
-    background-color: var(--gray-50);
+    background-color: var(--bg-primary);
     border-top: 1px solid var(--gray-200);
     padding: var(--spacing-lg) var(--spacing-xl);
     transition: all var(--transition-base);
@@ -123,7 +123,6 @@
 .tips-header h3 {
     margin: 0;
     font-size: var(--font-size-lg);
-    color: var(--gray-600);
 }
 
 .close-tips-btn {

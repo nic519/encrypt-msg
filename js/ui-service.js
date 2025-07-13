@@ -67,7 +67,23 @@ window.UIService = {
     scrollToBottom() {
         const messagesContainer = document.getElementById('messages-area');
         if (messagesContainer) {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            // 延迟执行，确保DOM更新完成
+            setTimeout(() => {
+                // 强制滚动到底部，并确保有足够的偏移量
+                const scrollHeight = messagesContainer.scrollHeight;
+                const clientHeight = messagesContainer.clientHeight;
+                const maxScrollTop = scrollHeight - clientHeight;
+                
+                // 在移动端添加额外的偏移量，确保完全显示
+                const extraOffset = window.innerWidth <= 767 ? 20 : 0;
+                messagesContainer.scrollTop = maxScrollTop + extraOffset;
+                
+                // 使用smooth行为的备用方案
+                messagesContainer.scrollTo({
+                    top: maxScrollTop + extraOffset,
+                    behavior: 'smooth'
+                });
+            }, 100);
         }
     },
     
