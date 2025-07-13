@@ -45,7 +45,7 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding: var(--spacing-md);
-        padding-bottom: 250px; /* 增加到250px，为iOS Chrome提供更多空间 */
+        padding-bottom: 150px; /* 恢复合理间距 */
         scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch; /* iOS滚动优化 */
         position: relative;
@@ -207,7 +207,7 @@
     .messages-container::after {
         content: '';
         display: block;
-        height: 220px; /* 进一步增加高度，专为iOS Chrome优化 */
+        height: 120px; /* 恢复合理高度 */
         flex-shrink: 0;
         width: 100%;
     }
@@ -255,19 +255,16 @@
         border-left-width: 2px;
     }
     
-    /* iOS Chrome 特定优化 */
+    /* iOS Chrome 特定优化 - 重点解决滚动逻辑问题 */
     @supports (-webkit-touch-callout: none) {
         /* 针对iOS Chrome的特殊处理 */
         .messages-container {
-            padding-bottom: 280px !important; /* iOS Chrome需要更多底部空间 */
+            /* 禁用smooth滚动，iOS Chrome可能有问题 */
+            scroll-behavior: auto !important;
             /* 强制重绘以确保正确的滚动行为 */
             transform: translateZ(0);
             backface-visibility: hidden;
             perspective: 1000;
-        }
-        
-        .messages-container::after {
-            height: 250px !important; /* iOS Chrome需要更多底部空间 */
         }
         
         /* 确保输入框不会影响滚动计算 */
@@ -281,16 +278,6 @@
             transform: translateZ(0);
             backface-visibility: hidden;
             perspective: 1000;
-        }
-        
-        /* iOS Chrome 专门的滚动区域底部间距 */
-        .messages-container {
-            /* 使用 CSS env() 变量来处理安全区域 */
-            padding-bottom: calc(280px + env(safe-area-inset-bottom, 0px)) !important;
-        }
-        
-        .messages-container::after {
-            height: calc(250px + env(safe-area-inset-bottom, 0px)) !important;
         }
     }
     
@@ -314,22 +301,22 @@
     /* 虚拟键盘弹出时的保护措施 */
     @media (max-height: 500px) {
         .messages-container {
-            padding-bottom: 300px !important; /* 当屏幕高度很小时（如键盘弹出），大幅增加底部间距 */
+            padding-bottom: 200px !important; /* 当屏幕高度很小时（如键盘弹出），增加底部间距 */
         }
         
         .messages-container::after {
-            height: 250px !important; /* 增加额外高度 */
+            height: 150px !important; /* 增加额外高度 */
         }
     }
     
     /* 超小屏幕的额外保护 */
     @media (max-height: 400px) {
         .messages-container {
-            padding-bottom: 330px !important;
+            padding-bottom: 220px !important;
         }
         
         .messages-container::after {
-            height: 270px !important;
+            height: 170px !important;
         }
     }
 } 
