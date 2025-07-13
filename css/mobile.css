@@ -45,13 +45,16 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding: var(--spacing-md);
-        padding-bottom: 200px; /* 增加到200px，确保足够的空间 */
+        padding-bottom: 250px; /* 增加到250px，为iOS Chrome提供更多空间 */
         scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch; /* iOS滚动优化 */
         position: relative;
         /* 确保消息容器不会被输入框遮挡 */
         margin-bottom: 0;
         box-sizing: border-box;
+        /* iOS Chrome 兼容性优化 */
+        transform: translateZ(0); /* 强制硬件加速 */
+        will-change: scroll-position; /* 优化滚动性能 */
     }
     
     /* 移动端消息气泡样式优化 */
@@ -204,7 +207,7 @@
     .messages-container::after {
         content: '';
         display: block;
-        height: 180px; /* 进一步增加高度，确保足够的滚动空间 */
+        height: 220px; /* 进一步增加高度，专为iOS Chrome优化 */
         flex-shrink: 0;
         width: 100%;
     }
@@ -252,7 +255,44 @@
         border-left-width: 2px;
     }
     
-
+    /* iOS Chrome 特定优化 */
+    @supports (-webkit-touch-callout: none) {
+        /* 针对iOS Chrome的特殊处理 */
+        .messages-container {
+            padding-bottom: 280px !important; /* iOS Chrome需要更多底部空间 */
+            /* 强制重绘以确保正确的滚动行为 */
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000;
+        }
+        
+        .messages-container::after {
+            height: 250px !important; /* iOS Chrome需要更多底部空间 */
+        }
+        
+        /* 确保输入框不会影响滚动计算 */
+        .input-area {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        
+        /* 触发重绘的辅助类 */
+        .force-repaint {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000;
+        }
+        
+        /* iOS Chrome 专门的滚动区域底部间距 */
+        .messages-container {
+            /* 使用 CSS env() 变量来处理安全区域 */
+            padding-bottom: calc(280px + env(safe-area-inset-bottom, 0px)) !important;
+        }
+        
+        .messages-container::after {
+            height: calc(250px + env(safe-area-inset-bottom, 0px)) !important;
+        }
+    }
     
     /* 移动端滚动条 */
     .messages-container::-webkit-scrollbar {
@@ -274,22 +314,22 @@
     /* 虚拟键盘弹出时的保护措施 */
     @media (max-height: 500px) {
         .messages-container {
-            padding-bottom: 250px !important; /* 当屏幕高度很小时（如键盘弹出），大幅增加底部间距 */
+            padding-bottom: 300px !important; /* 当屏幕高度很小时（如键盘弹出），大幅增加底部间距 */
         }
         
         .messages-container::after {
-            height: 200px !important; /* 增加额外高度 */
+            height: 250px !important; /* 增加额外高度 */
         }
     }
     
     /* 超小屏幕的额外保护 */
     @media (max-height: 400px) {
         .messages-container {
-            padding-bottom: 280px !important;
+            padding-bottom: 330px !important;
         }
         
         .messages-container::after {
-            height: 220px !important;
+            height: 270px !important;
         }
     }
 } 

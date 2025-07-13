@@ -131,7 +131,7 @@ window.UIService = {
     },
     
     /**
-     * 调整消息区域的底部内边距，确保所有消息都可见
+     * 调整消息区域的底部内边距，确保所有消息都可见，特别优化iOS Chrome
      */
     adjustMessageAreaPadding() {
         const messagesArea = document.getElementById('messages-area');
@@ -139,28 +139,94 @@ window.UIService = {
         
         if (messagesArea && inputArea && window.innerWidth <= 767) {
             const inputAreaHeight = inputArea.offsetHeight;
-            const extraPadding = 60; // 增加更多安全边距
+            
+            // 检测iOS Chrome，需要更多间距
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isChrome = /Chrome/.test(navigator.userAgent);
+            const isIOSChrome = isIOS && isChrome;
+            
+            // iOS Chrome需要更多的安全边距
+            const extraPadding = isIOSChrome ? 120 : 80;
             const totalPadding = inputAreaHeight + extraPadding;
             
             // 设置足够的底部间距
             messagesArea.style.paddingBottom = totalPadding + 'px';
             
-            console.log(`移动端布局调整: 输入框高度=${inputAreaHeight}px, 设置间距=${totalPadding}px`);
+            console.log(`移动端布局调整: 输入框高度=${inputAreaHeight}px, 设置间距=${totalPadding}px${isIOSChrome ? ' (iOS Chrome优化)' : ''}`);
         }
     },
 
     /**
-     * 强制滚动到最底部 - 移动端增强版
+     * 强制滚动到最底部 - 移动端增强版，专门优化iOS Chrome
      */
     forceScrollToBottom() {
         const messagesContainer = document.getElementById('messages-area');
         if (messagesContainer && window.innerWidth <= 767) {
-            // 简化滚动逻辑，移除复杂的setTimeout嵌套
+            // 先调整间距
             this.adjustMessageAreaPadding();
             
+            // 检测是否为iOS Chrome
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isChrome = /Chrome/.test(navigator.userAgent);
+            const isIOSChrome = isIOS && isChrome;
+            
+            // 为iOS Chrome触发重绘
+            if (isIOSChrome) {
+                messagesContainer.classList.add('force-repaint');
+                setTimeout(() => {
+                    messagesContainer.classList.remove('force-repaint');
+                }, 10);
+            }
+            
+            // 多次尝试滚动，确保在iOS Chrome中生效
+            const attemptScroll = (attempt = 0) => {
+                if (attempt >= 5) return; // 最多尝试5次
+                
+                const scrollHeight = messagesContainer.scrollHeight;
+                const clientHeight = messagesContainer.clientHeight;
+                const maxScrollTop = scrollHeight - clientHeight;
+                
+                // iOS Chrome需要额外的偏移量
+                const extraOffset = isIOSChrome ? 50 : 20;
+                const targetScroll = maxScrollTop + extraOffset;
+                
+                // 使用多种滚动方式
+                messagesContainer.scrollTop = targetScroll;
+                
+                // 使用 scrollTo 作为备用
+                messagesContainer.scrollTo({
+                    top: targetScroll,
+                    behavior: 'smooth'
+                });
+                
+                // 为iOS Chrome使用requestAnimationFrame强制滚动
+                if (isIOSChrome) {
+                    requestAnimationFrame(() => {
+                        messagesContainer.scrollTop = targetScroll;
+                        requestAnimationFrame(() => {
+                            messagesContainer.scrollTop = targetScroll;
+                        });
+                    });
+                }
+                
+                // 检查是否真的滚动到底部，如果没有则重试
+                setTimeout(() => {
+                    const currentScroll = messagesContainer.scrollTop;
+                    const threshold = 10; // 允许的误差范围
+                    
+                    if (Math.abs(currentScroll - targetScroll) > threshold) {
+                        console.log(`滚动重试 ${attempt + 1}: 目标=${targetScroll}, 当前=${currentScroll}`);
+                        attemptScroll(attempt + 1);
+                    } else {
+                        console.log(`滚动成功: 目标=${targetScroll}, 当前=${currentScroll}`);
+                    }
+                }, 100);
+            };
+            
+            // 延迟开始滚动，确保DOM完全更新
             setTimeout(() => {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }, 100);
+                attemptScroll();
+            }, 150);
         }
     },
     
