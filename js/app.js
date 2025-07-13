@@ -38,9 +38,9 @@ document.addEventListener('alpine:init', () => {
             UIService.setupMobileAdaptation();
             
             // 添加测试消息用于验证滚动功能
-            this.addTestMessages();
+            // this.addTestMessages();
             
-            console.log('应用已初始化，messages数组长度:', this.messages.length);
+            // console.log('应用已初始化，messages数组长度:', this.messages.length);
         },
         
         // 添加测试消息方法
