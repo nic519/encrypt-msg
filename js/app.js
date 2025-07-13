@@ -75,7 +75,12 @@ document.addEventListener('alpine:init', () => {
                 
                 // 滚动到底部
                 this.$nextTick(() => {
-                    UIService.scrollToBottom();
+                    if (window.innerWidth <= 767) {
+                        // 移动端使用强制滚动
+                        UIService.forceScrollToBottom();
+                    } else {
+                        UIService.scrollToBottom();
+                    }
                 });
                 
                 console.log('加密消息处理完成');
@@ -124,7 +129,12 @@ document.addEventListener('alpine:init', () => {
                     
                     // 滚动到底部
                     this.$nextTick(() => {
-                        UIService.scrollToBottom();
+                        if (window.innerWidth <= 767) {
+                            // 移动端使用强制滚动
+                            UIService.forceScrollToBottom();
+                        } else {
+                            UIService.scrollToBottom();
+                        }
                     });
                     
                     console.log('解密消息处理完成');

@@ -112,9 +112,33 @@ window.UIService = {
         });
         
         // 监听窗口大小变化，调整消息区域的底部内边距
-        window.addEventListener('resize', () => this.adjustMessageAreaPadding());
+        window.addEventListener('resize', () => {
+            this.adjustMessageAreaPadding();
+            // 重新滚动到底部确保显示正确
+            if (window.innerWidth <= 767) {
+                setTimeout(() => this.forceScrollToBottom(), 300);
+            }
+        });
+        
+        // 监听输入框高度变化（处理虚拟键盘）
+        const inputArea = document.querySelector('.input-area');
+        if (inputArea) {
+            const resizeObserver = new ResizeObserver(() => {
+                if (window.innerWidth <= 767) {
+                    this.adjustMessageAreaPadding();
+                    setTimeout(() => this.forceScrollToBottom(), 200);
+                }
+            });
+            resizeObserver.observe(inputArea);
+        }
+        
         // 初始调整
         this.adjustMessageAreaPadding();
+        
+        // 页面加载后强制滚动一次
+        if (window.innerWidth <= 767) {
+            setTimeout(() => this.forceScrollToBottom(), 500);
+        }
         
         // 处理输入框焦点问题
         messageInput.addEventListener('focus', function() {
@@ -134,7 +158,39 @@ window.UIService = {
         
         if (messagesArea && inputArea && window.innerWidth <= 767) {
             const inputAreaHeight = inputArea.offsetHeight;
-            messagesArea.style.paddingBottom = (inputAreaHeight + 20) + 'px';
+            const extraPadding = 60; // 增加更多安全边距
+            const totalPadding = inputAreaHeight + extraPadding;
+            
+            // 设置足够的底部间距
+            messagesArea.style.paddingBottom = totalPadding + 'px';
+            
+            console.log(`移动端布局调整: 输入框高度=${inputAreaHeight}px, 设置间距=${totalPadding}px`);
+        }
+    },
+
+    /**
+     * 强制滚动到最底部 - 移动端增强版
+     */
+    forceScrollToBottom() {
+        const messagesContainer = document.getElementById('messages-area');
+        if (messagesContainer && window.innerWidth <= 767) {
+            // 确保布局调整完成后再滚动
+            this.adjustMessageAreaPadding();
+            
+            setTimeout(() => {
+                const scrollHeight = messagesContainer.scrollHeight;
+                const clientHeight = messagesContainer.clientHeight;
+                const maxScrollTop = scrollHeight - clientHeight + 100; // 额外偏移确保完全显示
+                
+                messagesContainer.scrollTop = maxScrollTop;
+                
+                // 双重确认滚动
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 100);
+                
+                console.log(`强制滚动: scrollHeight=${scrollHeight}, clientHeight=${clientHeight}, scrollTop=${messagesContainer.scrollTop}`);
+            }, 200);
         }
     },
     

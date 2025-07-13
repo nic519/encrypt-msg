@@ -45,10 +45,13 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding: var(--spacing-md);
-        padding-bottom: 150px; /* 足够的底部间距，防止被输入框遮挡 */
+        padding-bottom: 200px; /* 增加到200px，确保足够的空间 */
         scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch; /* iOS滚动优化 */
         position: relative;
+        /* 确保消息容器不会被输入框遮挡 */
+        margin-bottom: 0;
+        box-sizing: border-box;
     }
     
     /* 移动端消息气泡样式优化 */
@@ -201,8 +204,9 @@
     .messages-container::after {
         content: '';
         display: block;
-        height: 140px; /* 增加高度，确保足够的滚动空间 */
+        height: 180px; /* 进一步增加高度，确保足够的滚动空间 */
         flex-shrink: 0;
+        width: 100%;
     }
     
     /* 移动端提示区域 */
@@ -270,18 +274,22 @@
     /* 虚拟键盘弹出时的保护措施 */
     @media (max-height: 500px) {
         .messages-container {
-            padding-bottom: 180px; /* 当屏幕高度很小时（如键盘弹出），增加更多底部间距 */
+            padding-bottom: 250px !important; /* 当屏幕高度很小时（如键盘弹出），大幅增加底部间距 */
         }
         
         .messages-container::after {
-            height: 160px; /* 增加额外高度 */
+            height: 200px !important; /* 增加额外高度 */
         }
     }
     
     /* 超小屏幕的额外保护 */
     @media (max-height: 400px) {
         .messages-container {
-            padding-bottom: 200px;
+            padding-bottom: 280px !important;
+        }
+        
+        .messages-container::after {
+            height: 220px !important;
         }
     }
 } 
