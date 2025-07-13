@@ -249,6 +249,15 @@
             max-height: 300px;
             overflow-y: auto;
             padding: 10px 0;
+            word-break: break-word;
+        }
+        
+        #decrypt-output-text {
+            white-space: pre-wrap;
+        }
+        
+        #encrypt-output-text {
+            word-break: break-all;
         }
 
         .tips {
@@ -302,11 +311,11 @@
             <h1>🔐 文本加密工具</h1>
             
             <div class="tabs">
-                <button class="tab active" onclick="showTab('encrypt')">🔒 加密文本</button>
-                <button class="tab" onclick="showTab('decrypt')">🔓 解密文本</button>
+                <button class="tab" onclick="showTab('encrypt')">🔒 加密文本</button>
+                <button class="tab active" onclick="showTab('decrypt')">🔓 解密文本</button>
             </div>
 
-            <div id="encrypt-tab" class="tab-content active">
+            <div id="encrypt-tab" class="tab-content">
                 <div class="form-group">
                     <label for="plaintext">✏️ 输入要加密的文本：</label>
                     <textarea id="plaintext" placeholder="请输入需要加密的文本内容..."></textarea>
@@ -329,7 +338,7 @@
                 </div>
             </div>
 
-            <div id="decrypt-tab" class="tab-content">
+            <div id="decrypt-tab" class="tab-content active">
                 <div class="form-group">
                     <label for="ciphertext">📝 输入要解密的文本：</label>
                     <textarea id="ciphertext" placeholder="请输入需要解密的加密文本..."></textarea>
@@ -562,14 +571,34 @@
             const resultDiv = document.getElementById(type + '-result');
             const outputDiv = document.getElementById(type + '-output-text');
             
-            outputDiv.textContent = text;
+            // 根据类型处理显示方式
+            if (type === 'decrypt' && isSuccess) {
+                // 解密结果需要保留换行和空格
+                outputDiv.innerHTML = text.replace(/\n/g, '<br>');
+            } else if (type === 'encrypt' && isSuccess) {
+                // 加密结果是纯Base64，直接显示，去除可能的首尾空格
+                outputDiv.textContent = text.trim();
+            } else {
+                // 错误信息等直接显示
+                outputDiv.textContent = text;
+            }
             resultDiv.className = 'result show ' + (isSuccess ? 'success' : 'error');
         }
 
         // 复制到剪贴板
         async function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
-            const text = element.textContent;
+            
+            // 获取原始文本
+            let text;
+            if (element.innerHTML.includes('<br>')) {
+                // 如果包含HTML标签，需要转换回纯文本
+                text = element.innerHTML.replace(/<br>/g, '\n');
+            } else {
+                // 纯文本直接获取
+                text = element.textContent;
+            }
+            
             const btn = event.target;
             
             // 方法1: 使用现代 Clipboard API
