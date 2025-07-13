@@ -111,41 +111,22 @@ window.UIService = {
             this.style.height = newHeight + 'px';
         });
         
-        // 监听窗口大小变化，调整消息区域的底部内边距
+        // 简化窗口大小变化处理
         window.addEventListener('resize', () => {
             this.adjustMessageAreaPadding();
-            // 重新滚动到底部确保显示正确
-            if (window.innerWidth <= 767) {
-                setTimeout(() => this.forceScrollToBottom(), 300);
-            }
         });
-        
-        // 监听输入框高度变化（处理虚拟键盘）
-        const inputArea = document.querySelector('.input-area');
-        if (inputArea) {
-            const resizeObserver = new ResizeObserver(() => {
-                if (window.innerWidth <= 767) {
-                    this.adjustMessageAreaPadding();
-                    setTimeout(() => this.forceScrollToBottom(), 200);
-                }
-            });
-            resizeObserver.observe(inputArea);
-        }
         
         // 初始调整
         this.adjustMessageAreaPadding();
         
-        // 页面加载后强制滚动一次
-        if (window.innerWidth <= 767) {
-            setTimeout(() => this.forceScrollToBottom(), 500);
-        }
-        
-        // 处理输入框焦点问题
-        messageInput.addEventListener('focus', function() {
-            // 在iOS上，当输入框获取焦点时，滚动到页面底部
-            setTimeout(function() {
-                window.scrollTo(0, document.body.scrollHeight);
-            }, 300);
+        // 简化输入框焦点处理，移除可能有问题的window.scrollTo
+        messageInput.addEventListener('focus', () => {
+            setTimeout(() => {
+                this.adjustMessageAreaPadding();
+                if (window.innerWidth <= 767) {
+                    this.scrollToBottom();
+                }
+            }, 100);
         });
     },
     
@@ -174,23 +155,12 @@ window.UIService = {
     forceScrollToBottom() {
         const messagesContainer = document.getElementById('messages-area');
         if (messagesContainer && window.innerWidth <= 767) {
-            // 确保布局调整完成后再滚动
+            // 简化滚动逻辑，移除复杂的setTimeout嵌套
             this.adjustMessageAreaPadding();
             
             setTimeout(() => {
-                const scrollHeight = messagesContainer.scrollHeight;
-                const clientHeight = messagesContainer.clientHeight;
-                const maxScrollTop = scrollHeight - clientHeight + 100; // 额外偏移确保完全显示
-                
-                messagesContainer.scrollTop = maxScrollTop;
-                
-                // 双重确认滚动
-                setTimeout(() => {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }, 100);
-                
-                console.log(`强制滚动: scrollHeight=${scrollHeight}, clientHeight=${clientHeight}, scrollTop=${messagesContainer.scrollTop}`);
-            }, 200);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 100);
         }
     },
     
