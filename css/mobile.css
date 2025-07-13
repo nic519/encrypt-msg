@@ -255,29 +255,11 @@
         border-left-width: 2px;
     }
     
-    /* iOS Chrome 特定优化 - 重点解决滚动逻辑问题 */
+    /* iOS 滚动优化 - 简化版本 */
     @supports (-webkit-touch-callout: none) {
-        /* 针对iOS Chrome的特殊处理 */
         .messages-container {
-            /* 禁用smooth滚动，iOS Chrome可能有问题 */
-            scroll-behavior: auto !important;
-            /* 强制重绘以确保正确的滚动行为 */
             transform: translateZ(0);
-            backface-visibility: hidden;
-            perspective: 1000;
-        }
-        
-        /* 确保输入框不会影响滚动计算 */
-        .input-area {
-            transform: translateZ(0);
-            backface-visibility: hidden;
-        }
-        
-        /* 触发重绘的辅助类 */
-        .force-repaint {
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            perspective: 1000;
+            -webkit-overflow-scrolling: touch;
         }
     }
     

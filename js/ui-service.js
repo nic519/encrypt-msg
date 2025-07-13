@@ -146,13 +146,11 @@ window.UIService = {
             
             // 设置足够的底部间距
             messagesArea.style.paddingBottom = totalPadding + 'px';
-            
-            console.log(`移动端布局调整: 输入框高度=${inputAreaHeight}px, 设置间距=${totalPadding}px`);
         }
     },
 
     /**
-     * 强制滚动到最底部 - 重新设计，专门解决iOS Chrome滚动失效问题
+     * 强制滚动到最底部 - 简化版本
      */
     forceScrollToBottom() {
         const messagesContainer = document.getElementById('messages-area');
@@ -160,75 +158,18 @@ window.UIService = {
             // 先调整间距
             this.adjustMessageAreaPadding();
             
-            // 检测是否为iOS Chrome
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            const isChrome = /Chrome/.test(navigator.userAgent);
-            const isIOSChrome = isIOS && isChrome;
-            
-            console.log('检测到浏览器:', isIOSChrome ? 'iOS Chrome' : 'Other');
-            
-            // 为iOS Chrome使用不同的滚动策略
-            if (isIOSChrome) {
-                // iOS Chrome专用滚动逻辑
-                this.forceScrollForIOSChrome(messagesContainer);
-            } else {
-                // 其他浏览器使用标准滚动
-                this.standardScrollToBottom(messagesContainer);
-            }
-        }
-    },
-    
-    /**
-     * iOS Chrome专用滚动逻辑
-     */
-    forceScrollForIOSChrome(messagesContainer) {
-        // 获取最后一个消息元素
-        const messageElements = messagesContainer.querySelectorAll('.message-bubble');
-        const lastMessage = messageElements[messageElements.length - 1];
-        
-        if (lastMessage) {
-            // 方法1: 使用scrollIntoView - 可能更可靠
+            // 使用统一的滚动逻辑
             setTimeout(() => {
-                lastMessage.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'end',
-                    inline: 'nearest'
-                });
+                const scrollHeight = messagesContainer.scrollHeight;
+                messagesContainer.scrollTop = scrollHeight;
                 
-                // 备用方法: 直接设置scrollTop
-                setTimeout(() => {
-                    const scrollHeight = messagesContainer.scrollHeight;
-                    messagesContainer.scrollTop = scrollHeight;
-                    
-                    // 再次确保滚动
-                    requestAnimationFrame(() => {
-                        messagesContainer.scrollTop = scrollHeight;
-                    });
-                }, 100);
-            }, 200);
-        } else {
-            // 如果没有消息，使用标准方法
-            this.standardScrollToBottom(messagesContainer);
+                // 备用方法：使用scrollTo
+                messagesContainer.scrollTo({
+                    top: scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 100);
         }
-    },
-    
-    /**
-     * 标准滚动到底部方法
-     */
-    standardScrollToBottom(messagesContainer) {
-        setTimeout(() => {
-            const scrollHeight = messagesContainer.scrollHeight;
-            const clientHeight = messagesContainer.clientHeight;
-            const maxScrollTop = scrollHeight - clientHeight;
-            
-            messagesContainer.scrollTop = maxScrollTop;
-            
-            // 使用scrollTo作为备用
-            messagesContainer.scrollTo({
-                top: maxScrollTop,
-                behavior: 'smooth'
-            });
-        }, 100);
     },
     
     /**

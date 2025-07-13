@@ -3,17 +3,8 @@
  * 使用模块化服务，简化的Alpine.js应用
  */
 
-// 添加调试信息
-console.log('应用模块加载中...');
-
-// 确保DOM加载完成后再初始化
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM已加载完成，等待Alpine初始化...');
-});
-
 // Alpine.js 应用数据和方法
 document.addEventListener('alpine:init', () => {
-    console.log('Alpine初始化事件触发...');
     
     Alpine.data('encryptApp', () => ({
         // 响应式状态
@@ -26,8 +17,6 @@ document.addEventListener('alpine:init', () => {
         
         // 初始化
         init() {
-            console.log('加密应用初始化中...');
-            
             // 强制重置messages数组为空
             this.messages = [];
             
@@ -36,11 +25,6 @@ document.addEventListener('alpine:init', () => {
             
             // 设置移动端适配
             UIService.setupMobileAdaptation();
-            
-            // 添加测试消息用于验证滚动功能
-            // this.addTestMessages();
-            
-            // console.log('应用已初始化，messages数组长度:', this.messages.length);
         },
         
         // 添加测试消息方法
@@ -120,11 +104,7 @@ document.addEventListener('alpine:init', () => {
             document.getElementById('message-input').focus();
         },
         
-        // 清空所有消息
-        clearAllMessages() {
-            this.messages = [];
-            console.log('已清空所有消息');
-        },
+
         
         // 切换帮助提示显示
         toggleTips() {
@@ -137,15 +117,11 @@ document.addEventListener('alpine:init', () => {
             if (!text) return;
             
             try {
-                console.log('开始加密文本:', text);
-                
                 // 使用加密服务加密文本
                 const encryptedText = await CryptoService.encrypt(text);
-                console.log('加密成功');
                 
                 // 使用消息服务创建消息对象
                 const newMessage = MessageService.createEncryptMessage(text, encryptedText);
-                console.log('创建加密消息对象:', newMessage.id);
                 
                 // 添加消息到列表
                 this.messages = MessageService.addMessage(this.messages, newMessage);
@@ -163,8 +139,6 @@ document.addEventListener('alpine:init', () => {
                     }
                 });
                 
-                console.log('加密消息处理完成');
-                
             } catch (error) {
                 console.error('加密错误:', error);
                 alert('加密失败: ' + error.message);
@@ -173,31 +147,23 @@ document.addEventListener('alpine:init', () => {
         
         // 粘贴并解密
         async pasteAndDecrypt() {
-            console.log('尝试解密...');
-            
             try {
                 let textToDecrypt = '';
                 
                 // 优先使用输入框内容
                 if (this.inputText.trim()) {
-                    console.log('使用输入框内容进行解密');
                     textToDecrypt = this.inputText.trim();
                 } else {
                     // 尝试从剪贴板读取
-                    console.log('尝试从剪贴板读取内容');
                     textToDecrypt = await UIService.readFromClipboard();
-                    console.log('从剪贴板获取内容成功');
                 }
                 
                 if (textToDecrypt) {
                     // 使用加密服务解密
-                    console.log('开始解密文本');
                     const plaintext = await CryptoService.decrypt(textToDecrypt);
-                    console.log('解密成功');
                     
                     // 使用消息服务创建解密消息
                     const newMessage = MessageService.createDecryptMessage(textToDecrypt, plaintext);
-                    console.log('创建解密消息对象:', newMessage.id);
                     
                     // 添加消息到列表
                     this.messages = MessageService.addMessage(this.messages, newMessage);
@@ -217,7 +183,6 @@ document.addEventListener('alpine:init', () => {
                         }
                     });
                     
-                    console.log('解密消息处理完成');
                 } else {
                     alert('没有找到要解密的文本，请输入或粘贴加密文本');
                 }
@@ -232,7 +197,6 @@ document.addEventListener('alpine:init', () => {
             try {
                 // 使用UI服务复制到剪贴板
                 await UIService.copyToClipboard(content);
-                console.log('内容已复制到剪贴板');
                 
                 // 更新按钮状态
                 UIService.updateCopyButtonState(event);

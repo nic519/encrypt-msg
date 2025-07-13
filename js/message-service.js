@@ -83,7 +83,6 @@ window.MessageService = {
             return messages;
         }
         
-        console.log('添加消息:', message.id, message.type);
         return [...messages, message];
     },
     
