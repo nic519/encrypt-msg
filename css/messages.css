@@ -1,0 +1,193 @@
+/* 消息气泡样式 */
+
+/* 统一的消息气泡基础样式 */
+.message-bubble {
+    margin-bottom: var(--spacing-xl);
+    max-width: var(--bubble-max-width);
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-light);
+    flex-shrink: 0;
+}
+
+/* 左侧消息气泡 */
+.left-bubble {
+    align-self: flex-start;
+    margin-right: var(--bubble-margin-desktop);
+    margin-left: 0;
+    background: var(--bubble-left-bg);
+    min-width: 250px;
+    border: 1px solid var(--bubble-left-border);
+    color: var(--bubble-left-color);
+    box-shadow: var(--bubble-left-shadow);
+}
+
+/* 右侧消息气泡 - 使用优化后的蓝色系 */
+.right-bubble {
+    align-self: flex-end;
+    margin-left: var(--bubble-margin-desktop);
+    margin-right: 0;
+    background: var(--bubble-right-bg);
+    min-width: 250px;
+    border: 1px solid var(--bubble-right-border);
+    color: var(--bubble-right-color);
+    box-shadow: var(--bubble-right-shadow);
+}
+
+.right-bubble .message-content {
+    color: var(--bubble-right-color);
+}
+
+.right-bubble .message-label {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.right-bubble .message-time {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* 消息内容 */
+.message {
+    padding: var(--spacing-md) var(--spacing-lg);
+    position: relative;
+    word-break: break-word;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.message:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.message-content {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+    white-space: pre-wrap;
+    width: 100%;
+    overflow-wrap: break-word;
+}
+
+.encrypted-content {
+    font-family: var(--font-family-mono);
+    word-break: break-all;
+    font-size: var(--font-size-xs);
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-small);
+    margin-top: var(--spacing-sm);
+}
+
+/* 消息头部 */
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.message-label {
+    font-size: var(--font-size-xs);
+    font-weight: bold;
+    color: var(--gray-500);
+    display: flex;
+    align-items: center;
+}
+
+.message-time {
+    font-size: var(--font-size-xs);
+    color: var(--gray-400);
+    margin-left: var(--spacing-sm);
+}
+
+/* 加密消息特殊样式 - 优化配色 */
+.encrypt-message {
+    background-color: var(--encrypt-msg-bg-left);
+    border-left: 3px solid var(--encrypt-msg-border-left);
+}
+
+/* 左侧气泡中的加密消息 */
+.left-bubble .encrypt-message {
+    background-color: var(--encrypt-msg-bg-left);
+    border-left: 3px solid var(--encrypt-msg-border-left);
+}
+
+.left-bubble .encrypt-message .message-label {
+    color: var(--encrypt-msg-label-color);
+}
+
+/* 右侧气泡中的加密消息 - 使用协调的蓝色系 */
+.right-bubble .encrypt-message {
+    background-color: var(--encrypt-msg-bg-right);
+    border-left: 3px solid var(--encrypt-msg-border-right);
+}
+
+.right-bubble .encrypt-message .message-label {
+    color: var(--encrypt-msg-label-color-right);
+}
+
+.right-bubble .encrypt-message .encrypted-content {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 右侧气泡中的消息分隔线 */
+.right-bubble .message:not(:last-child) {
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+    padding-bottom: var(--spacing-md);
+    margin-bottom: 0;
+}
+
+/* 气泡底部 */
+.bubble-footer {
+    display: none; /* 隐藏原来的底部时间，使用消息头部的时间 */
+}
+
+/* 复制按钮 */
+.message-copy-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-small);
+    transition: all var(--transition-fast);
+}
+
+.message-copy-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.message-copy-btn.copied {
+    color: var(--success-color);
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.message-copy-btn.copied .copy-icon::before {
+    content: '✓';
+}
+
+.copy-icon::before {
+    content: '📋';
+}
+
+/* 右侧气泡中的复制按钮 */
+.right-bubble .message-copy-btn {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.right-bubble .message-copy-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.right-bubble .message-copy-btn.copied {
+    color: #a8e6cf;
+    background-color: rgba(168, 230, 207, 0.2);
+} 

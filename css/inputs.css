@@ -1,0 +1,191 @@
+/* 输入框和按钮样式 */
+
+.input-area {
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    flex-direction: column;
+}
+
+.textarea-container {
+    position: relative;
+    width: 100%;
+}
+
+#message-input {
+    width: 100%;
+    padding: var(--spacing-lg);
+    padding-right: 40px; /* 为清除按钮留出空间 */
+    border: 2px solid var(--input-border);
+    border-radius: var(--border-radius-large);
+    font-size: var(--font-size-base);
+    font-family: var(--font-family-base);
+    resize: none;
+    min-height: 60px;
+    background: var(--input-bg);
+    color: var(--gray-800);
+    transition: border-color var(--transition-base);
+}
+
+#message-input:focus {
+    outline: none;
+    border-color: var(--input-border-focus);
+}
+
+#message-input::placeholder {
+    color: var(--input-placeholder);
+}
+
+.input-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-md);
+}
+
+.main-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    flex: 1;
+    justify-content: flex-end;
+}
+
+/* 按钮基础样式 */
+.action-btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border: none;
+    border-radius: var(--border-radius-large);
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    font-weight: bold;
+    transition: all var(--transition-base);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-light);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+.btn-icon {
+    margin-right: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+}
+
+/* 解密按钮 - 占据更多空间 */
+.decrypt-btn {
+    background: var(--btn-success-bg);
+    color: white;
+    flex: 3;
+    min-width: 180px;
+}
+
+.decrypt-btn:hover {
+    background: var(--btn-success-hover);
+}
+
+/* 加密按钮 - 占据较少空间 */
+.encrypt-btn {
+    background: var(--btn-primary-bg);
+    color: white;
+    flex: 2;
+    min-width: 120px;
+}
+
+.encrypt-btn:hover {
+    background: var(--btn-primary-hover);
+}
+
+/* 清除按钮 */
+.clear-btn {
+    position: absolute;
+    right: var(--spacing-lg);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    z-index: 2;
+    transition: color var(--transition-fast);
+}
+
+.clear-btn:hover {
+    color: var(--danger-color);
+}
+
+/* 帮助按钮 */
+.help-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--btn-secondary-bg);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-small);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    transition: background-color var(--transition-base);
+    margin-right: var(--spacing-md);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.help-btn:hover {
+    background: var(--btn-secondary-hover);
+}
+
+/* 按钮文本 */
+.btn-text {
+    font-weight: normal;
+    font-size: var(--font-size-sm);
+}
+
+/* 按钮禁用状态 */
+.action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.action-btn:disabled:hover {
+    transform: none;
+    box-shadow: var(--shadow-light);
+}
+
+/* 按钮加载状态 */
+.action-btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.action-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+} 

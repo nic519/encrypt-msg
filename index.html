@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>文本加密工具</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- 更新 Alpine.js CDN 链接 -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <!-- Alpine.js 本地文件 -->
+    <script defer src="lib/alpine.min.js"></script>
 </head>
 <body>
     <div class="container" x-data="encryptApp">
@@ -23,46 +23,30 @@
                     </div>
                 </div>
                 
-                <!-- 消息列表 -->
-                <template x-for="message in messages.filter(m => m && m.id && m.type && m.content && Array.isArray(m.content) && m.content.length >= 2)" :key="message.id">
+                <!-- 消息列表 - 使用优化后的过滤方法 -->
+                <template x-for="message in getValidMessages()" :key="message.id">
                     <div class="message-bubble" 
                          :class="message.type === 'right' ? 'right-bubble' : 'left-bubble'">
                         
-                        <!-- 第一个内容块 -->
-                        <template x-if="message.content[0] && message.content[0].text && message.content[0].label">
-                            <div class="message" :class="{'encrypt-message': message.content[0].type === 'encrypted'}">
+                        <!-- 统一的内容循环 - 消除重复 -->
+                        <template x-for="(contentItem, index) in message.content" :key="index">
+                            <div x-if="contentItem && contentItem.text && contentItem.label" 
+                                 class="message" 
+                                 :class="{'encrypt-message': contentItem.type === 'encrypted'}">
                                 <div class="message-header">
                                     <div class="message-label">
-                                        <span x-text="message.content[0].label"></span>
-                                        <span class="message-time" x-text="message.time"></span>
+                                        <span x-text="contentItem.label"></span>
+                                        <!-- 只在第一个内容项显示时间 -->
+                                        <span x-show="index === 0" class="message-time" x-text="message.time"></span>
                                     </div>
-                                    <button class="message-copy-btn" @click="copyMessageContent(message.content[0].text, $event)">
+                                    <button class="message-copy-btn" @click="copyMessageContent(contentItem.text, $event)">
                                         <span class="copy-icon"></span>
                                         <span>复制</span>
                                     </button>
                                 </div>
                                 <div class="message-content" 
-                                     :class="{'encrypted-content': message.content[0].type === 'encrypted'}" 
-                                     x-html="message.content[0].type === 'encrypted' ? message.content[0].text : message.content[0].text.replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/ {2}/g, '&nbsp;&nbsp;')">
-                                </div>
-                            </div>
-                        </template>
-                        
-                        <!-- 第二个内容块 -->
-                        <template x-if="message.content[1] && message.content[1].text && message.content[1].label">
-                            <div class="message" :class="{'encrypt-message': message.content[1].type === 'encrypted'}">
-                                <div class="message-header">
-                                    <div class="message-label">
-                                        <span x-text="message.content[1].label"></span>
-                                    </div>
-                                    <button class="message-copy-btn" @click="copyMessageContent(message.content[1].text, $event)">
-                                        <span class="copy-icon"></span>
-                                        <span>复制</span>
-                                    </button>
-                                </div>
-                                <div class="message-content" 
-                                     :class="{'encrypted-content': message.content[1].type === 'encrypted'}" 
-                                     x-html="message.content[1].type === 'encrypted' ? message.content[1].text : message.content[1].text.replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/ {2}/g, '&nbsp;&nbsp;')">
+                                     :class="{'encrypted-content': contentItem.type === 'encrypted'}" 
+                                     x-html="contentItem.type === 'encrypted' ? contentItem.text : contentItem.text.replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/ {2}/g, '&nbsp;&nbsp;')">
                                 </div>
                             </div>
                         </template>
@@ -107,6 +91,10 @@
         <div class="copy-success" :class="{'show': showCopySuccess}" x-text="copySuccessText"></div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- 模块化JavaScript文件 -->
+    <script src="js/crypto-service.js"></script>
+    <script src="js/message-service.js"></script>
+    <script src="js/ui-service.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html> 

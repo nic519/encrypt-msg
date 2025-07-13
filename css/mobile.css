@@ -1,0 +1,263 @@
+/* 移动端样式优化 */
+
+@media (max-width: 767px) {
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    body {
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-secondary);
+    }
+    
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: hidden;
+        background-color: var(--bg-primary);
+    }
+    
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: var(--spacing-md);
+        padding-bottom: var(--spacing-xl);
+    }
+    
+    /* 移动端消息气泡样式优化 */
+    .message-bubble {
+        max-width: var(--bubble-max-width);
+        margin-bottom: var(--spacing-lg);
+        box-shadow: var(--shadow-light);
+    }
+    
+    .left-bubble {
+        margin-right: var(--bubble-margin-mobile);
+        margin-left: 0;
+        background: var(--bubble-left-bg);
+        border: 1px solid var(--bubble-left-border);
+        min-width: 200px;
+    }
+    
+    .right-bubble {
+        margin-left: var(--bubble-margin-mobile);
+        margin-right: 0;
+        background: var(--bubble-right-bg);
+        border: 1px solid var(--bubble-right-border);
+        min-width: 200px;
+    }
+    
+    /* 移动端消息内容 */
+    .message {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .message-content {
+        font-size: var(--font-size-sm);
+    }
+    
+    .encrypted-content {
+        font-size: var(--font-size-xs);
+    }
+    
+    /* 固定底部输入区域 */
+    .input-area {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg-secondary);
+        padding: var(--spacing-sm);
+        border-top: 1px solid var(--gray-200);
+        z-index: var(--z-fixed);
+    }
+    
+    .textarea-container {
+        position: relative;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    #message-input {
+        width: 100%;
+        padding: var(--spacing-md) 35px var(--spacing-md) var(--spacing-lg);
+        border-radius: var(--border-radius);
+        min-height: 40px;
+        max-height: 80px;
+        border: 1px solid var(--input-border);
+        font-size: var(--font-size-sm);
+    }
+    
+    .clear-btn {
+        position: absolute;
+        right: var(--spacing-md);
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: var(--font-size-base);
+    }
+    
+    .input-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-sm);
+    }
+    
+    .main-actions {
+        display: flex;
+        flex: 1;
+        gap: var(--spacing-sm);
+    }
+    
+    .action-btn {
+        height: 36px;
+        padding: 0 var(--spacing-lg);
+        border-radius: var(--border-radius);
+        font-size: var(--font-size-sm);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: var(--shadow-light);
+    }
+    
+    .btn-icon {
+        margin-right: var(--spacing-xs);
+        font-size: var(--font-size-base);
+    }
+    
+    .btn-text {
+        font-weight: normal;
+        font-size: var(--font-size-sm);
+    }
+    
+    .help-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--gray-100);
+        color: var(--gray-500);
+        margin: 0;
+        padding: 0;
+        font-size: var(--font-size-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .help-btn:hover {
+        background: var(--gray-200);
+    }
+    
+    /* 移动端按钮配色 - 与新主题保持一致 */
+    .decrypt-btn {
+        flex: 3;
+        background: var(--success-color);
+        color: white;
+    }
+    
+    .decrypt-btn:hover {
+        background: var(--success-dark);
+    }
+    
+    .encrypt-btn {
+        flex: 2;
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .encrypt-btn:hover {
+        background: var(--primary-dark);
+    }
+    
+    /* 调整底部间距，防止按钮被遮挡 */
+    .messages-container::after {
+        content: '';
+        display: block;
+        height: 120px;
+    }
+    
+    /* 移动端提示区域 */
+    .tips {
+        position: fixed;
+        bottom: 120px;
+        left: 0;
+        right: 0;
+        max-height: 50vh;
+        z-index: var(--z-sticky);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        box-shadow: var(--shadow-medium);
+    }
+    
+    .tips-header {
+        padding: var(--spacing-md) var(--spacing-lg);
+        background: var(--bg-secondary);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+    
+    .tips ul {
+        padding: 0 var(--spacing-lg) var(--spacing-lg);
+    }
+    
+    .tips li {
+        margin-bottom: var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+    
+    /* 移动端标题样式 */
+    .title-content h1 {
+        font-size: var(--font-size-lg);
+        padding: var(--spacing-xs) 0;
+    }
+    
+    /* 移动端复制按钮 */
+    .message-copy-btn {
+        padding: var(--spacing-xs);
+        font-size: var(--font-size-xs);
+    }
+    
+    /* 移动端加密消息样式 */
+    .encrypt-message {
+        border-left-width: 2px;
+    }
+    
+
+    
+    /* 移动端滚动条 */
+    .messages-container::-webkit-scrollbar {
+        width: 3px;
+    }
+    
+    .tips::-webkit-scrollbar {
+        width: 3px;
+    }
+    
+    /* 移动端复制成功提示 */
+    .copy-success {
+        top: var(--spacing-md);
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-xs);
+        border-radius: var(--border-radius-small);
+    }
+} 
