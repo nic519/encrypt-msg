@@ -200,8 +200,17 @@ function showResult(type, text, isSuccess) {
     
     // 根据类型处理显示方式
     if (type === 'decrypt' && isSuccess) {
-        // 解密结果需要保留换行和空格
-        outputDiv.innerHTML = text.replace(/\n/g, '<br>');
+        // 解密结果需要完整保留所有格式，包括换行、空格和制表符
+        const formattedText = text
+            .replace(/\n/g, '<br>')
+            .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+            .replace(/ {2}/g, '&nbsp;&nbsp;');
+        outputDiv.innerHTML = formattedText;
+        
+        // 确保容器能够显示完整内容
+        outputDiv.style.whiteSpace = 'pre-wrap';
+        outputDiv.style.wordBreak = 'break-word';
+        outputDiv.style.overflowWrap = 'break-word';
     } else if (type === 'encrypt' && isSuccess) {
         // 加密结果是纯Base64，直接显示，去除可能的首尾空格
         outputDiv.textContent = text.trim();
@@ -218,9 +227,13 @@ async function copyToClipboard(elementId) {
     
     // 获取原始文本
     let text;
-    if (element.innerHTML.includes('<br>')) {
+    if (element.innerHTML.includes('<br>') || element.innerHTML.includes('&nbsp;')) {
         // 如果包含HTML标签，需要转换回纯文本
-        text = element.innerHTML.replace(/<br>/g, '\n');
+        text = element.innerHTML
+            .replace(/<br>/g, '\n')
+            .replace(/&nbsp;&nbsp;&nbsp;&nbsp;/g, '\t')
+            .replace(/&nbsp;&nbsp;/g, '  ')
+            .replace(/&nbsp;/g, ' ');
     } else {
         // 纯文本直接获取
         text = element.textContent;
