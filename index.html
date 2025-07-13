@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>文本加密工具</title>
     <link rel="stylesheet" href="css/main.css">
-    <!-- Alpine.js 本地文件1 -->
+    <!-- Alpine.js 本地文件 -->
     <script defer src="lib/alpine.min.js"></script>
 </head>
 <body>
     <div class="container" x-data="encryptApp">
         <div class="wechat-warning" id="wechatWarning" x-show="isWechat">
-            ⚠️ 检测到微信访问，请使用浏览器打开本页面
+            ⚠️ 检测到微信访问，请使用外部浏览器打开本页面
         </div>
 
         <div class="chat-container" id="mainContent" x-show="!isWechat">
