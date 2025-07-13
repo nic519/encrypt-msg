@@ -8,27 +8,45 @@ body {
     font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    padding: 20px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .container {
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    padding: 40px;
-    max-width: 600px;
+    border-radius: 0;
+    box-shadow: none;
     width: 100%;
-    margin: 20px auto;
+    max-width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    body {
+        padding: 20px;
+    }
+    
+    .container {
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        max-width: 900px;
+        height: 85vh;
+    }
 }
 
 .wechat-warning {
     background: #ff4757;
     color: white;
     padding: 20px;
-    border-radius: 15px;
     text-align: center;
     font-size: 18px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     display: none;
 }
 
@@ -36,94 +54,297 @@ body {
     display: block;
 }
 
-.main-content {
-    display: block;
-}
-
-.main-content.hide {
-    display: none;
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-    font-size: 28px;
-}
-
-.tabs {
+/* 聊天界面样式 */
+.chat-container {
     display: flex;
-    margin-bottom: 30px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.tab {
+    flex-direction: column;
     flex: 1;
-    padding: 15px;
-    text-align: center;
-    background: #f8f9fa;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    overflow: hidden;
+    background-color: #f5f7fb;
 }
 
-.tab.active {
-    background: #667eea;
+.messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-bubble {
+    margin-bottom: 20px;
+    max-width: 80%;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    flex-shrink: 0; /* 防止气泡被压缩 */
+}
+
+/* 左侧消息气泡 - 解密内容 */
+.left-bubble {
+    align-self: flex-start;
+    margin-right: 25%;
+    margin-left: 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-width: 250px;
+    border: 1px solid #dee2e6;
+}
+
+/* 右侧消息气泡 - 发送内容 */
+.right-bubble {
+    align-self: flex-end;
+    margin-left: 25%;
+    margin-right: 0;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    min-width: 250px;
+    border: 1px solid #0056b3;
+}
+
+.right-bubble .message-content {
     color: white;
 }
 
-.tab:hover:not(.active) {
-    background: #e9ecef;
+.right-bubble .message-label {
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.tab-content {
-    display: none;
+.right-bubble .message-time {
+    color: rgba(255, 255, 255, 0.7);
 }
 
-.tab-content.active {
-    display: block;
+/* 优化右侧气泡中的消息样式 */
+.right-bubble .message {
+    background-color: transparent;
+    transition: background-color 0.3s ease;
 }
 
-.form-group {
-    margin-bottom: 20px;
+/* 原始文本和加密结果之间的分隔线样式 */
+.right-bubble .message:not(:last-child) {
+    border-bottom: 1px dashed rgba(0,0,0,0.1);
+    padding-bottom: 12px;
+    margin-bottom: 0;
+}
+
+/* 加密结果的背景色，与原始文本形成自然过渡 */
+.right-bubble .encrypt-message {
+    background-color: rgba(220, 248, 198, 0.3);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* 原始文本的标签样式 */
+.right-bubble .message-label {
+    color: #4a6fa5;
+}
+
+/* 加密结果的标签样式 */
+.right-bubble .encrypt-message .message-label {
+    color: #5a9a5a;
+}
+
+.message {
+    padding: 12px 15px;
     position: relative;
+    word-break: break-word;
+    width: 100%; /* 确保消息占满气泡宽度 */
+    box-sizing: border-box;
 }
 
-label {
-    display: block;
+.message:not(:last-child) {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.bubble-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 15px;
+    font-size: 12px;
+    color: #6c757d;
+    background-color: rgba(0,0,0,0.02);
+    width: 100%; /* 确保footer占满气泡宽度 */
+}
+
+/* 加密消息特殊样式 */
+.encrypt-message {
+    background-color: #dcf8c6;
+}
+
+.message-content {
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    width: 100%; /* 确保内容占满消息宽度 */
+    overflow-wrap: break-word;
+}
+
+.encrypted-content {
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+    font-size: 13px;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 8px;
-    font-weight: bold;
-    color: #333;
 }
 
-textarea {
+.message-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    display: flex;
+    align-items: center;
+}
+
+.message-time {
+    font-size: 12px;
+    color: #6c757d;
+    margin-left: 8px;
+}
+
+.bubble-footer {
+    display: none; /* 隐藏原来的底部时间 */
+}
+
+/* 修改右侧气泡的样式 */
+.right-bubble .message-header {
+    border-bottom: none; /* 移除可能的底部边框 */
+}
+
+.message-copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    color: #6c757d;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 3px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.message-copy-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.message-copy-btn.copied {
+    color: #28a745;
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.message-copy-btn.copied .copy-icon::before {
+    content: '✓';
+}
+
+.copy-icon::before {
+    content: '📋';
+}
+
+.input-area {
+    padding: 15px;
+    background-color: #fff;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+}
+
+.textarea-container {
+    position: relative;
+    width: 100%;
+}
+
+#message-input {
     width: 100%;
     padding: 15px;
+    padding-right: 40px; /* 为清除按钮留出空间 */
     border: 2px solid #e9ecef;
-    border-radius: 10px;
+    border-radius: 20px;
     font-size: 16px;
     font-family: inherit;
-    resize: vertical;
+    resize: none;
+    min-height: 60px;
     transition: border-color 0.3s ease;
-    padding-right: 40px; /* 为清除按钮留出空间 */
 }
 
-textarea:focus {
+#message-input:focus {
     outline: none;
     border-color: #667eea;
 }
 
-textarea {
-    min-height: 120px;
+.input-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
 }
 
+.main-actions {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.action-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+/* 解密按钮占据更多空间 */
+.decrypt-btn {
+    background: #28a745;
+    color: white;
+    flex: 3; /* 解密按钮占据更多空间 */
+    min-width: 180px;
+}
+
+.decrypt-btn:hover {
+    background: #218838;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* 加密按钮占据较少空间 */
+.encrypt-btn {
+    background: #667eea;
+    color: white;
+    flex: 2; /* 加密按钮占据较少空间 */
+    min-width: 120px;
+}
+
+.encrypt-btn:hover {
+    background: #5a6fd8;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* 清除按钮样式 */
 .clear-btn {
     position: absolute;
-    right: 10px;
-    top: 40px;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
     border: none;
     color: #aaa;
@@ -131,164 +352,323 @@ textarea {
     cursor: pointer;
     padding: 5px;
     z-index: 2;
+    transition: color 0.2s ease;
 }
 
 .clear-btn:hover {
     color: #ff4757;
 }
 
-.btn {
-    width: 100%;
-    padding: 15px;
-    background: #667eea;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.btn:hover {
-    background: #5a6fd8;
-}
-
-.btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
-
-.primary-btn {
-    background: #28a745;
-}
-
-.primary-btn:hover {
-    background: #218838;
-}
-
-.secondary-btn {
+/* 帮助按钮样式 */
+.help-btn {
+    padding: 8px 12px;
     background: #6c757d;
-}
-
-.secondary-btn:hover {
-    background: #5a6268;
-}
-
-.result {
-    margin-top: 20px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    border: 2px solid #e9ecef;
-    word-break: break-all;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    line-height: 1.5;
-    display: none;
-    position: relative;
-}
-
-.result.show {
-    display: block;
-}
-
-.result.success {
-    background: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
-}
-
-.result.error {
-    background: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
-}
-
-.result-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed #ccc;
-}
-
-.result-title {
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.copy-btn {
-    padding: 6px 12px;
-    background: #28a745;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
-    gap: 5px;
+    justify-content: center;
 }
 
-.copy-btn:hover {
-    background: #218838;
+.help-btn:hover {
+    background: #5a6268;
 }
 
-.result-content {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 10px 0;
-    word-break: break-word;
-}
-
-#decrypt-output-text {
-    white-space: pre-wrap;
-}
-
-#encrypt-output-text {
-    word-break: break-all;
-}
-
+/* 提示区域样式 */
 .tips {
-    margin-top: 30px;
-    padding: 20px;
-    background: #e3f2fd;
-    border-radius: 10px;
-    border-left: 4px solid #2196f3;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 15px 20px;
+    transition: all 0.3s ease;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.tips-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.tips-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #495057;
+}
+
+.close-tips-btn {
+    background: none;
+    border: none;
+    color: #adb5bd;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s ease;
+}
+
+.close-tips-btn:hover {
+    color: #ff4757;
 }
 
 .tips ul {
-    margin-left: 20px;
+    padding-left: 20px;
+    margin: 0;
 }
 
 .tips li {
-    margin-bottom: 5px;
-    color: #333;
+    margin-bottom: 10px;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
 }
 
 .emoji {
-    font-size: 1.2em;
+    margin-right: 8px;
+    font-size: 18px;
 }
 
-@media (max-width: 768px) {
+/* 复制成功提示 */
+.copy-success {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(40, 167, 69, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.copy-success.show {
+    opacity: 1;
+}
+
+/* 标题消息样式 */
+.title-bubble {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 15px 0;
+    flex-shrink: 0;
+}
+
+.title-content {
+    display: inline-block;
+}
+
+.title-content h1 {
+    margin: 0;
+    font-size: 20px;
+    color: #555;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text; 
+    padding: 5px 0px; 
+}
+
+/* 移动端样式优化 */
+@media (max-width: 767px) {
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    body {
+        display: flex;
+        flex-direction: column;
+        background: white;
+    }
+    
     .container {
-        padding: 20px;
-        margin: 10px auto;
+        display: flex;
+        flex-direction: column;
+        height: 100vh; /* 视口高度 */
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
     
-    h1 {
-        font-size: 24px;
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: hidden;
+        background-color: #f5f7fb;
     }
     
-    .tab {
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+        padding-bottom: 20px;
+    }
+    
+    /* 移动端消息气泡样式优化 */
+    .message-bubble {
+        max-width: 80%;
+    }
+    
+    .left-bubble {
+        margin-right: 20%;
+        margin-left: 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
+    }
+    
+    .right-bubble {
+        margin-left: 20%;
+        margin-right: 0;
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        border: 1px solid #0056b3;
+    }
+    
+    .right-bubble .message-content {
+        color: white;
+    }
+    
+    .right-bubble .message-label {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .right-bubble .message-time {
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* 固定底部输入区域 */
+    .input-area {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 8px;
+        border-top: 1px solid #e9ecef;
+        z-index: 100;
+    }
+    
+    .textarea-container {
+        position: relative;
+        margin-bottom: 8px;
+    }
+    
+    #message-input {
+        width: 100%;
+        padding: 10px 35px 10px 15px;
+        border-radius: 18px;
+        min-height: 40px;
+        max-height: 80px;
+        border: 1px solid #e9ecef;
+        font-size: 15px;
+    }
+    
+    .clear-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+    }
+    
+    .input-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+    
+    .main-actions {
+        display: flex;
+        flex: 1;
+        gap: 8px;
+    }
+    
+    .action-btn {
+        height: 36px;
+        padding: 0 15px;
+        border-radius: 18px;
         font-size: 14px;
-        padding: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .btn-icon {
+        margin-right: 5px;
+        font-size: 16px;
+    }
+    
+    .btn-text {
+        font-weight: normal;
+        font-size: 14px;
+    }
+    
+    .help-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f1f1f1;
+        color: #666;
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* 移动端下的解密按钮 */
+    .decrypt-btn {
+        flex: 3; /* 解密按钮占据更多空间 */
+        background: #4CAF50;
+    }
+    
+    /* 移动端下的加密按钮 */
+    .encrypt-btn {
+        flex: 2; /* 加密按钮占据较少空间 */
+        background: #5677fc;
+    }
+    
+    /* 调整底部间距，防止按钮被遮挡 */
+    .messages-container::after {
+        content: '';
+        display: block;
+        height: 120px; /* 根据底部输入区域的高度调整 */
+    }
+    
+    /* 提示区域样式调整 */
+    .tips {
+        position: fixed;
+        bottom: 120px; /* 根据底部输入区域的高度调整 */
+        left: 0;
+        right: 0;
+        max-height: 50vh;
+        z-index: 99;
     }
 } 
