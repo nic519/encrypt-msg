@@ -183,7 +183,7 @@
 .title-bubble {
     width: 100%;
     text-align: center;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-xs);
     padding: var(--spacing-lg) 0;
     flex-shrink: 0;
 }
