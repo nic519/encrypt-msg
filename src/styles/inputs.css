@@ -127,24 +127,24 @@
 
 /* 帮助按钮 */
 .help-btn {
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: var(--btn-secondary-bg);
-    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    color: var(--gray-500);
     border: none;
-    border-radius: var(--border-radius-small);
     cursor: pointer;
     font-size: var(--font-size-sm);
     transition: background-color var(--transition-base);
     margin-right: var(--spacing-md);
-    width: 36px;
-    height: 36px;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .help-btn:hover {
-    background: var(--btn-secondary-hover);
+    background: var(--gray-200);
 }
 
 /* 按钮文本 */

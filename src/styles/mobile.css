@@ -57,30 +57,22 @@
         will-change: scroll-position; /* 优化滚动性能 */
     }
     
-    /* 移动端消息气泡样式优化 */
+    /* 移动端消息气泡布局调整 */
     .message-bubble {
-        max-width: var(--bubble-max-width);
         margin-bottom: var(--spacing-lg);
-        box-shadow: var(--shadow-light);
     }
     
     .left-bubble {
         margin-right: var(--bubble-margin-mobile);
-        margin-left: 0;
-        background: var(--bubble-left-bg);
-        border: 1px solid var(--bubble-left-border);
         min-width: 200px;
     }
     
     .right-bubble {
         margin-left: var(--bubble-margin-mobile);
-        margin-right: 0;
-        background: var(--bubble-right-bg);
-        border: 1px solid var(--bubble-right-border);
         min-width: 200px;
     }
     
-    /* 移动端消息内容 */
+    /* 移动端消息内容间距调整 */
     .message {
         padding: var(--spacing-sm) var(--spacing-md);
     }
@@ -113,13 +105,10 @@
     }
     
     #message-input {
-        width: 100%;
-        padding: var(--spacing-md) 35px var(--spacing-md) var(--spacing-lg);
-        border-radius: var(--border-radius);
         min-height: 40px;
         max-height: 80px;
-        border: 1px solid var(--input-border);
         font-size: var(--font-size-sm);
+        padding: var(--spacing-md) 35px var(--spacing-md) var(--spacing-lg);
     }
     
     .clear-btn {
@@ -146,12 +135,12 @@
     .action-btn {
         height: 36px;
         padding: 0 var(--spacing-lg);
-        border-radius: var(--border-radius);
         font-size: var(--font-size-sm);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: var(--shadow-light);
+        transform: none; /* 移动端不使用悬停时的位移效果 */
+    }
+    
+    .action-btn:hover {
+        transform: none;
     }
     
     .btn-icon {
@@ -160,47 +149,20 @@
     }
     
     .btn-text {
-        font-weight: normal;
         font-size: var(--font-size-sm);
     }
     
     .help-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: var(--gray-100);
-        color: var(--gray-500);
-        margin: 0;
-        padding: 0;
-        font-size: var(--font-size-sm);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        margin: 0; /* 移动端不需要右边距 */
     }
     
-    .help-btn:hover {
-        background: var(--gray-200);
-    }
-    
-    /* 移动端按钮配色 - 与新主题保持一致 */
+    /* 移动端按钮布局 */
     .decrypt-btn {
         flex: 3;
-        background: var(--success-color);
-        color: white;
-    }
-    
-    .decrypt-btn:hover {
-        background: var(--success-dark);
     }
     
     .encrypt-btn {
         flex: 2;
-        background: var(--primary-color);
-        color: white;
-    }
-    
-    .encrypt-btn:hover {
-        background: var(--primary-dark);
     }
     
     /* 调整底部间距，防止被输入框遮挡 */
@@ -212,7 +174,7 @@
         width: 100%;
     }
     
-    /* 移动端提示区域 */
+    /* 移动端提示区域布局调整 */
     .tips {
         position: fixed;
         bottom: 120px;
@@ -222,6 +184,7 @@
         z-index: var(--z-sticky);
         border-radius: var(--border-radius) var(--border-radius) 0 0;
         box-shadow: var(--shadow-medium);
+        padding: 0; /* 重置桌面端的padding */
     }
     
     .tips-header {
@@ -244,13 +207,13 @@
         padding: var(--spacing-xs) 0;
     }
     
-    /* 移动端复制按钮 */
+    /* 移动端复制按钮尺寸调整 */
     .message-copy-btn {
         padding: var(--spacing-xs);
         font-size: var(--font-size-xs);
     }
     
-    /* 移动端加密消息样式 */
+    /* 移动端加密消息边框调整 */
     .encrypt-message {
         border-left-width: 2px;
     }
