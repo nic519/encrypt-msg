@@ -1,3 +1,4 @@
+import { useState } from 'preact/hooks';
 import { Message, MessageContent } from '@/types';
 import { uiService } from '@/services';
 
@@ -10,6 +11,12 @@ interface MessageBubbleProps {
  * 消息气泡组件
  */
 export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
+  // 管理每个内容项的展开状态
+  const [expandedStates, setExpandedStates] = useState<Record<number, boolean>>({});
+
+  // 加密内容的字符数限制
+  const ENCRYPTED_TEXT_LIMIT = 120;
+
   const handleCopy = async (content: string, event: MouseEvent) => {
     try {
       await uiService.copyToClipboard(content);
@@ -24,6 +31,13 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
     }
   };
 
+  const toggleExpanded = (index: number) => {
+    setExpandedStates(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
   const formatText = (text: string, type: string) => {
     if (type === 'encrypted') {
       return text;
@@ -32,6 +46,20 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
       .replace(/\n/g, '<br>')
       .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
       .replace(/ {2}/g, '&nbsp;&nbsp;');
+  };
+
+  const getDisplayText = (text: string, type: string, index: number) => {
+    if (type === 'encrypted' && text.length > ENCRYPTED_TEXT_LIMIT) {
+      const isExpanded = expandedStates[index];
+      if (!isExpanded) {
+        return text.substring(0, ENCRYPTED_TEXT_LIMIT) + '...';
+      }
+    }
+    return text;
+  };
+
+  const shouldShowExpandButton = (text: string, type: string) => {
+    return type === 'encrypted' && text.length > ENCRYPTED_TEXT_LIMIT;
   };
 
   return (
@@ -53,8 +81,18 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
           </div>
           <div 
             className={`message-content ${contentItem.type === 'encrypted' ? 'encrypted-content' : ''}`}
-            dangerouslySetInnerHTML={{ __html: formatText(contentItem.text, contentItem.type) }}
+            dangerouslySetInnerHTML={{ __html: formatText(getDisplayText(contentItem.text, contentItem.type, index), contentItem.type) }}
           />
+          {shouldShowExpandButton(contentItem.text, contentItem.type) && (
+            <div className="expand-control">
+              <button
+                className="expand-btn"
+                onClick={() => toggleExpanded(index)}
+              >
+                {expandedStates[index] ? '收起' : '展开全部'}
+              </button>
+            </div>
+          )}
         </div>
       ))}
     </div>

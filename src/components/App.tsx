@@ -55,7 +55,7 @@ const createMockMessages = (): Message[] => {
         },
         {
           type: 'encrypted',
-          text: 'AES-GCM:U2FsdGVkX1+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+          text: 'AES-GCM:U2FsdGVkX1+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=ABCDEFGHIJKLMNOPQRSTUVWXYZ',
           label: '加密结果'
         }
       ]
@@ -67,7 +67,7 @@ const createMockMessages = (): Message[] => {
       content: [
         {
           type: 'encrypted',
-          text: 'AES-GCM:U2FsdGVkX1+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+          text: 'AES-GCM:U2FsdGVkX1+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=ABCDEFGHIJKLMNOPQRSTUVWXYZ',
           label: '收到的加密文本'
         },
         {

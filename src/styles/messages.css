@@ -177,4 +177,45 @@
 .right-bubble .message-copy-btn.copied {
     color: #a8e6cf;
     background-color: rgba(168, 230, 207, 0.2);
+}
+
+/* 展开控制按钮 */
+.expand-control {
+    margin-top: var(--spacing-sm);
+    text-align: center;
+}
+
+.expand-btn {
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--primary-color);
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-small);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.expand-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: var(--primary-color);
+}
+
+.expand-btn:active {
+    transform: scale(0.98);
+}
+
+/* 右侧气泡中的展开按钮 */
+.right-bubble .expand-btn {
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.right-bubble .expand-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
 } 
