@@ -1,6 +1,5 @@
 import { useState } from 'preact/hooks';
 import { Message, MessageContent } from '@/types';
-import { uiService } from '@/services';
 
 interface MessageBubbleProps {
   message: Message;
@@ -14,23 +13,27 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
   // 管理每个内容项的展开状态
   const [expandedStates, setExpandedStates] = useState<Record<number, boolean>>({});
 
-  // 加密内容的字符数限制
-  const ENCRYPTED_TEXT_LIMIT = 120;
-
-  const handleCopy = async (content: string, event: MouseEvent) => {
+  // 处理复制
+  const handleCopy = async (text: string, event: Event) => {
+    event.preventDefault();
     try {
-      await uiService.copyToClipboard(content);
-      const button = (event.target as HTMLElement).closest('.message-copy-btn') as HTMLElement;
-      if (button) {
-        uiService.updateCopyButtonState(button);
-      }
-      onCopySuccess('已复制到剪贴板');
-    } catch (error) {
-      console.error('复制失败:', error);
-      alert('复制失败，请手动复制');
+      await navigator.clipboard.writeText(text);
+      onCopySuccess('已复制');
+      
+      // 添加视觉反馈
+      const target = event.target as HTMLElement;
+      const button = target.closest('.encrypted-attachment') || target;
+      button.classList.add('copied');
+      setTimeout(() => {
+        button.classList.remove('copied');
+      }, 1000);
+    } catch (err) {
+      console.error('复制失败:', err);
+      onCopySuccess('复制失败');
     }
   };
 
+  // 切换展开状态
   const toggleExpanded = (index: number) => {
     setExpandedStates(prev => ({
       ...prev,
@@ -38,49 +41,74 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
     }));
   };
 
+  // 格式化文本
   const formatText = (text: string, type: string) => {
+    return text.replace(/\n/g, '<br>');
+  };
+
+  // 获取显示文本
+  const getDisplayText = (text: string, type: string, index: number) => {
     if (type === 'encrypted') {
       return text;
     }
-    return text
-      .replace(/\n/g, '<br>')
-      .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
-      .replace(/ {2}/g, '&nbsp;&nbsp;');
-  };
 
-  const getDisplayText = (text: string, type: string, index: number) => {
-    if (type === 'encrypted' && text.length > ENCRYPTED_TEXT_LIMIT) {
+    const maxLength = 1000;
       const isExpanded = expandedStates[index];
-      if (!isExpanded) {
-        return text.substring(0, ENCRYPTED_TEXT_LIMIT) + '...';
-      }
+    
+    if (text.length <= maxLength || isExpanded) {
+      return text;
     }
-    return text;
+    
+    return text.substring(0, maxLength) + '...';
   };
 
+  // 判断是否显示展开按钮
   const shouldShowExpandButton = (text: string, type: string) => {
-    return type === 'encrypted' && text.length > ENCRYPTED_TEXT_LIMIT;
+    return type !== 'encrypted' && text.length > 1000;
+  };
+
+  // 判断是否显示展开状态
+  const shouldShowExpanded = (text: string, type: string, index: number) => {
+    return shouldShowExpandButton(text, type) && expandedStates[index];
+  };
+
+  const formatEncryptedText = (text: string) => {
+    const prefix = text.startsWith('AES-GCM:') ? text.substring(8) : text;
+    if (prefix.length <= 16) return prefix;
+    
+    const start = prefix.substring(0, 6);
+    const end = prefix.substring(prefix.length - 6);
+    return `${start}****${end}`;
   };
 
   return (
     <div className={`message-bubble ${message.type === 'right' ? 'right-bubble' : 'left-bubble'}`}>
-      {message.content.map((contentItem: MessageContent, index: number) => (
-        <div key={index} className={`message ${contentItem.type === 'encrypted' ? 'encrypt-message' : ''}`}>
-          <div className="message-header">
-            <div className="message-label">
-              <span>{contentItem.label}</span>
-              {index === 0 && <span className="message-time">{message.time}</span>}
-            </div>
-            <button 
-              className="message-copy-btn"
-              onClick={(e) => handleCopy(contentItem.text, e as any)}
-            >
-              <span className="copy-icon"></span>
-              <span>复制</span>
-            </button>
-          </div>
+      {/* 解密消息：密文在气泡左上方 */}
+      {message.type === 'left' && message.content.length > 1 && (
+        <div 
+          className="encrypted-attachment left-attachment"
+          onClick={(e) => handleCopy(message.content[0].text, e as any)}
+          title="点击复制密文"
+        >
+          <span className="encrypted-text">
+            {formatEncryptedText(message.content[0].text)}
+          </span>
+          <span className="encrypted-time">解密于 {message.time}</span>
+          <i className="bi bi-clipboard-fill"></i>
+          <span className="copy-text">复制</span>
+        </div>
+      )}
+      
+      {/* 主要消息内容 */}
+      <div className="bubble-content">
+        {message.content.map((contentItem: MessageContent, index: number) => {
+          // 跳过加密文本，因为它会显示在外部
+          if (contentItem.type === 'encrypted') return null;
+          
+          return (
+            <div key={index} className="message">
           <div 
-            className={`message-content ${contentItem.type === 'encrypted' ? 'encrypted-content' : ''}`}
+                className="message-content"
             dangerouslySetInnerHTML={{ __html: formatText(getDisplayText(contentItem.text, contentItem.type, index), contentItem.type) }}
           />
           {shouldShowExpandButton(contentItem.text, contentItem.type) && (
@@ -89,12 +117,30 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
                 className="expand-btn"
                 onClick={() => toggleExpanded(index)}
               >
-                {expandedStates[index] ? '收起' : '展开全部'}
+                    {expandedStates[index] ? '收起' : '展开'}
               </button>
             </div>
           )}
         </div>
-      ))}
+          );
+        })}
+      </div>
+      
+      {/* 加密消息：密文在气泡右下方 */}
+      {message.type === 'right' && message.content.length > 1 && (
+        <div 
+          className="encrypted-attachment right-attachment"
+          onClick={(e) => handleCopy(message.content[1].text, e as any)}
+          title="点击复制密文"
+        >
+          <span className="encrypted-text">
+            {formatEncryptedText(message.content[1].text)}
+          </span>
+          <span className="encrypted-time">加密于 {message.time}</span>
+          <i className="bi bi-clipboard-fill"></i>
+          <span className="copy-text">复制</span>
+        </div>
+      )}
     </div>
   );
 } 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Message } from '@/types';
-import { cryptoService, messageService, uiService } from '@/services';
+import { cryptoService, messageService, uiService, themeService } from '@/services';
 import { MessageList } from './MessageList';
 import { InputArea } from './InputArea';
 import { TipsPanel } from './TipsPanel';
@@ -122,12 +122,15 @@ export function App() {
   const [inputText, setInputText] = useState('');
   const [showTips, setShowTips] = useState(false);
   const [showCopySuccess, setShowCopySuccess] = useState(false);
-  const [copySuccessText, setCopySuccessText] = useState('已复制到剪贴板');
+  const [copySuccessText, setCopySuccessText] = useState('已复制');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // 初始化
   useEffect(() => {
+    // 初始化主题系统
+    themeService.init();
+    
     // 检测微信浏览器
     setIsWechat(uiService.detectWeChat());
     
@@ -228,6 +231,11 @@ export function App() {
     setShowTips(!showTips);
   };
 
+  // 切换主题
+  const toggleTheme = () => {
+    themeService.toggle();
+  };
+
   // 微信浏览器警告
   if (isWechat) {
     return (
@@ -235,14 +243,14 @@ export function App() {
         <div className="wechat-warning-content">
           <div className="warning-icon">🚫</div>
           <h2>无法在微信中使用</h2>
-          <p>为了保证功能的正常使用和数据安全，请使用外部浏览器打开本页面</p>
+          <p>请使用外部浏览器打开</p>
            
           <div className="usage-tip">
             <p>💡 <strong>如何使用：</strong></p>
             <ol>
               <li>点击右上角 <strong>「⋯」</strong> 菜单</li>
               <li>选择 <strong>「在浏览器中打开」</strong></li>
-              <li>或复制链接到浏览器中访问</li>
+              <li>或复制链接到浏览器访问</li>
             </ol>
           </div>
         </div>
@@ -252,6 +260,29 @@ export function App() {
 
   return (
     <div className="container">
+      <div className="header-bar">
+        <h1 className="app-title">文本加密工具</h1>
+        <div className="header-actions">
+          <button 
+            className="header-btn" 
+            onClick={toggleTips}
+            disabled={isLoading}
+            aria-label="帮助"
+          >
+            <i className="bi bi-question-circle-fill"></i>
+          </button>
+          
+          <button 
+            className="header-btn" 
+            onClick={toggleTheme}
+            disabled={isLoading}
+            aria-label="切换主题"
+          >
+            <i className="bi bi-moon-fill"></i>
+          </button>
+        </div>
+      </div>
+      
       <div className="chat-container">
         <MessageList 
           messages={messages} 
@@ -264,7 +295,6 @@ export function App() {
         onInputChange={setInputText}
         onEncrypt={handleEncrypt}
         onDecrypt={handleDecrypt}
-        onToggleTips={toggleTips}
         disabled={isLoading}
       />
 

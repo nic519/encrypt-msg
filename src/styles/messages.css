@@ -1,4 +1,4 @@
-/* 消息气泡样式 */
+/* 消息气泡样式 - 极简设计 */
 
 /* 统一的消息气泡基础样式 */
 .message-bubble {
@@ -7,10 +7,14 @@
     width: auto;
     display: flex;
     flex-direction: column;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-light);
     flex-shrink: 0;
+    transition: all var(--transition-base);
+    position: relative;
+}
+
+/* 气泡内容容器 */
+.bubble-content {
+    overflow: hidden;
 }
 
 /* 左侧消息气泡 */
@@ -18,23 +22,109 @@
     align-self: flex-start;
     margin-right: var(--bubble-margin-desktop);
     margin-left: 0;
-    background: var(--bubble-left-bg);
-    min-width: 250px;
-    border: 1px solid var(--bubble-left-border);
-    color: var(--bubble-left-color);
-    box-shadow: var(--bubble-left-shadow);
 }
 
-/* 右侧消息气泡 - 使用优化后的蓝色系 */
+.left-bubble .bubble-content {
+    background: var(--bubble-left-bg);
+    color: var(--bubble-left-text);
+    min-width: 250px;
+    border-radius: 0 0 var(--border-radius-small) var(--border-radius-small);
+}
+
+.left-bubble .encrypted-attachment {
+    border-radius: var(--border-radius-small) var(--border-radius-small) 0 0;
+    margin-bottom: 0;
+}
+
+/* 右侧消息气泡 */
 .right-bubble {
     align-self: flex-end;
     margin-left: var(--bubble-margin-desktop);
     margin-right: 0;
+}
+
+.right-bubble .bubble-content {
     background: var(--bubble-right-bg);
+    color: var(--bubble-right-text);
     min-width: 250px;
-    border: 1px solid var(--bubble-right-border);
-    color: var(--bubble-right-color);
-    box-shadow: var(--bubble-right-shadow);
+    border-radius: var(--border-radius-small) var(--border-radius-small) 0 0;
+}
+
+.right-bubble .encrypted-attachment {
+    border-radius: 0 0 var(--border-radius-small) var(--border-radius-small);
+    margin-bottom: 0;
+}
+
+/* 密文附属显示 - 整个区域可点击 */
+.encrypted-attachment {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: var(--font-size-sm);
+    color: var(--text-tertiary);
+}
+
+.encrypted-attachment:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .encrypted-attachment {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .encrypted-attachment:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.encrypted-attachment.copied {
+    background: rgba(48, 209, 88, 0.1);
+}
+
+.left-attachment {
+    justify-content: flex-start;
+}
+
+.right-attachment {
+    justify-content: flex-start;
+}
+
+.encrypted-text {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    flex: 1;
+}
+
+.encrypted-time {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    opacity: 0.7;
+    margin-left: var(--spacing-sm);
+}
+
+.encrypted-attachment i {
+    font-size: var(--font-size-xs);
+    opacity: 0.6;
+    margin-left: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+.encrypted-attachment .copy-text {
+    font-size: var(--font-size-xs);
+    opacity: 0.8;
+    margin-left: var(--spacing-xs);
+    flex-shrink: 0;
+}
+
+/* 触屏设备显示复制文案 */
+@media (hover: none) {
+    .encrypted-attachment .copy-text {
+        opacity: 1;
+    }
 }
 
 /* 消息内容 */
@@ -47,52 +137,42 @@
 }
 
 .message:not(:last-child) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-/* 右侧气泡中的消息分隔线 - 统一样式，只调整颜色 */
 .right-bubble .message:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 .message-content {
-    font-size: var(--font-size-sm);
     line-height: var(--line-height-base);
+    margin: 0;
+    padding: 0;
     white-space: pre-wrap;
-    width: 100%;
+    word-wrap: break-word;
     overflow-wrap: break-word;
 }
 
-.encrypted-content {
-    font-family: var(--font-family-mono);
-    word-break: break-all;
-    font-size: var(--font-size-xs);
-    margin-top: var(--spacing-sm);
-}
-
-/* 消息头部 */
 .message-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
 }
 
 .message-label {
-    font-size: var(--font-size-xs);
-    font-weight: bold;
-    color: var(--gray-500);
     display: flex;
     align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
 }
 
 .message-time {
     font-size: var(--font-size-xs);
-    color: var(--gray-400);
-    margin-left: var(--spacing-sm);
+    opacity: 0.6;
 }
 
-/* 右侧气泡中的标签和时间颜色调整 */
 .right-bubble .message-label {
     color: rgba(255, 255, 255, 0.9);
 }
@@ -101,85 +181,27 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* 加密消息特殊样式 - 优化配色 */
+/* 加密消息样式 */
 .encrypt-message {
-    background-color: var(--encrypt-msg-bg-left);
-    border-left: 3px solid var(--encrypt-msg-border-left);
+    background: linear-gradient(135deg, 
+        var(--bubble-right-bg) 0%, 
+        color-mix(in srgb, var(--bubble-right-bg) 90%, black 10%) 100%
+    );
+    color: var(--bubble-right-text);
 }
 
-/* 左侧气泡中的加密消息 */
-.left-bubble .encrypt-message {
-    background-color: var(--encrypt-msg-bg-left);
-    border-left: 3px solid var(--encrypt-msg-border-left);
+.encrypt-message .message-label {
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.left-bubble .encrypt-message .message-label {
-    color: var(--encrypt-msg-label-color);
-}
-
-/* 右侧气泡中的加密消息 - 使用协调的蓝色系 */
 .right-bubble .encrypt-message {
-    background-color: var(--encrypt-msg-bg-right);
-    border-left: 3px solid var(--encrypt-msg-border-right);
+    background: var(--bubble-right-bg);
 }
 
 .right-bubble .encrypt-message .message-label {
-    color: var(--encrypt-msg-label-color-right);
+    color: rgba(255, 255, 255, 0.9);
 }
 
-/* 气泡底部 */
-.bubble-footer {
-    display: none; /* 隐藏原来的底部时间，使用消息头部的时间 */
-}
-
-/* 复制按钮 */
-.message-copy-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    background: none;
-    border: none;
-    color: var(--gray-400);
-    font-size: var(--font-size-sm);
-    cursor: pointer;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-small);
-    transition: all var(--transition-fast);
-}
-
-.message-copy-btn:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.message-copy-btn.copied {
-    color: var(--success-color);
-    background-color: rgba(40, 167, 69, 0.1);
-}
-
-.message-copy-btn.copied .copy-icon::before {
-    content: '✓';
-}
-
-.copy-icon::before {
-    content: '📋';
-}
-
-/* 右侧气泡中的复制按钮 */
-.right-bubble .message-copy-btn {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.right-bubble .message-copy-btn:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: white;
-}
-
-.right-bubble .message-copy-btn.copied {
-    color: #a8e6cf;
-    background-color: rgba(168, 230, 207, 0.2);
-}
-
-/* 展开控制按钮 */
 .expand-control {
     margin-top: var(--spacing-sm);
     text-align: center;
@@ -187,35 +209,25 @@
 
 .expand-btn {
     background: none;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: var(--primary-color);
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
     font-size: var(--font-size-xs);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--border-radius-small);
-    cursor: pointer;
     transition: all var(--transition-fast);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+    opacity: 0.7;
 }
 
 .expand-btn:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    border-color: var(--primary-color);
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.03);
 }
 
-.expand-btn:active {
-    transform: scale(0.98);
-}
-
-/* 右侧气泡中的展开按钮 */
 .right-bubble .expand-btn {
-    color: rgba(255, 255, 255, 0.9);
-    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .right-bubble .expand-btn:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.5);
-    color: white;
+    background: rgba(255, 255, 255, 0.1);
 } 

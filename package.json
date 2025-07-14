@@ -9,6 +9,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "bootstrap-icons": "^1.13.1",
     "preact": "^10.19.3"
   },
   "devDependencies": {
@@ -18,4 +19,4 @@
     "vite": "^5.0.8"
   },
   "type": "module"
-} 
+}

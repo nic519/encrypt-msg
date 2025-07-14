@@ -34,3 +34,5 @@ out/
 # 其他
 .cache/
 coverage/ 
+
+.specstory/
