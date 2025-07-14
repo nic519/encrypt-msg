@@ -223,14 +223,62 @@
     opacity: 1;
 }
 
-/* 提示区域 */
+/* TipsPanel统一居中显示 */
+.tips-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: var(--z-modal);
+    backdrop-filter: blur(2px);
+}
+
 .tips {
-    background-color: var(--bg-primary);
-    border-top: 1px solid var(--gray-200);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    z-index: calc(var(--z-modal) + 1);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-heavy);
+    border: 2px solid var(--input-border);
+    max-height: 70vh;
+    overflow-y: auto;
+    background: var(--bg-primary);
     padding: var(--spacing-lg) var(--spacing-xl);
     transition: all var(--transition-base);
-    max-height: 200px;
-    overflow-y: auto;
+}
+
+/* 移动端适配 */
+@media (max-width: 767px) {
+    .tips {
+        width: 95%;
+        max-width: 400px;
+        max-height: 80vh;
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+    
+    .tips-header {
+        margin-bottom: var(--spacing-sm);
+        padding-bottom: var(--spacing-sm);
+    }
+    
+    .tips-header h3 {
+        font-size: var(--font-size-base);
+    }
+    
+    .tips li {
+        margin-bottom: var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+    
+    .tips ul {
+        padding-left: var(--spacing-md);
+    }
 }
 
 .tips-header {

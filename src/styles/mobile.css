@@ -174,32 +174,7 @@
         width: 100%;
     }
     
-    /* 移动端提示区域布局调整 */
-    .tips {
-        position: fixed;
-        bottom: 120px;
-        left: 0;
-        right: 0;
-        max-height: 50vh;
-        z-index: var(--z-sticky);
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
-        box-shadow: var(--shadow-medium);
-        padding: 0; /* 重置桌面端的padding */
-    }
-    
-    .tips-header {
-        padding: var(--spacing-md) var(--spacing-lg);
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
-    }
-    
-    .tips ul {
-        padding: 0 var(--spacing-lg) var(--spacing-lg);
-    }
-    
-    .tips li {
-        margin-bottom: var(--spacing-sm);
-        font-size: var(--font-size-sm);
-    }
+
     
     /* 移动端标题样式 */
     .title-content h1 {
