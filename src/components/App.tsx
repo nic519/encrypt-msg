@@ -6,6 +6,114 @@ import { InputArea } from './InputArea';
 import { TipsPanel } from './TipsPanel';
 import { Notification } from './Notification';
 
+// 开发环境测试数据
+const createMockMessages = (): Message[] => {
+  return [
+    {
+      id: 'mock-1',
+      type: 'right',
+      time: '10:30',
+      content: [
+        {
+          type: 'original',
+          text: '这是一条测试消息，用于调试样式效果。',
+          label: '原始文本'
+        },
+        {
+          type: 'encrypted',
+          text: 'AES-GCM:U2FsdGVkX1+vupppZksvRf5pq5g5XjFRIipRkwB0K1Y96Qsv2Lm+31cmzaAILwyt',
+          label: '加密结果'
+        }
+      ]
+    },
+    {
+      id: 'mock-2',
+      type: 'left',
+      time: '10:31',
+      content: [
+        {
+          type: 'encrypted',
+          text: 'AES-GCM:U2FsdGVkX1+vupppZksvRf5pq5g5XjFRIipRkwB0K1Y96Qsv2Lm+31cmzaAILwyt',
+          label: '收到的加密文本'
+        },
+        {
+          type: 'decrypted',
+          text: '这是一条解密后的消息，用于测试左侧气泡样式。',
+          label: '解密结果'
+        }
+      ]
+    },
+    {
+      id: 'mock-3',
+      type: 'right',
+      time: '10:32',
+      content: [
+        {
+          type: 'original',
+          text: '这是一条很长的测试消息，用于测试消息气泡在处理长文本时的样式效果。这条消息包含了多行文本，\n可以测试换行符的处理。\n\n还可以测试空行的处理效果。',
+          label: '原始文本'
+        },
+        {
+          type: 'encrypted',
+          text: 'AES-GCM:U2FsdGVkX1+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+          label: '加密结果'
+        }
+      ]
+    },
+    {
+      id: 'mock-4',
+      type: 'left',
+      time: '10:33',
+      content: [
+        {
+          type: 'encrypted',
+          text: 'AES-GCM:U2FsdGVkX1+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+          label: '收到的加密文本'
+        },
+        {
+          type: 'decrypted',
+          text: '这是一条包含特殊字符的解密消息：\n• 列表项 1\n• 列表项 2\n\n代码示例：\nfunction test() {\n  console.log("Hello World");\n}\n\n以及一些特殊符号：@#$%^&*()[]{}',
+          label: '解密结果'
+        }
+      ]
+    },
+    {
+      id: 'mock-5',
+      type: 'right',
+      time: '10:34',
+      content: [
+        {
+          type: 'original',
+          text: '短消息测试',
+          label: '原始文本'
+        },
+        {
+          type: 'encrypted',
+          text: 'AES-GCM:U2FsdGVkX1+ShortMessage',
+          label: '加密结果'
+        }
+      ]
+    },
+    {
+      id: 'mock-6',
+      type: 'left',
+      time: '10:35',
+      content: [
+        {
+          type: 'encrypted',
+          text: 'AES-GCM:U2FsdGVkX1+ShortMessage',
+          label: '收到的加密文本'
+        },
+        {
+          type: 'decrypted',
+          text: '简短回复',
+          label: '解密结果'
+        }
+      ]
+    }
+  ];
+};
+
 /**
  * 主应用组件
  */
@@ -23,9 +131,21 @@ export function App() {
     // 检测微信浏览器
     setIsWechat(uiService.detectWeChat());
     
+    // 临时测试代码 - 开发环境下可以通过URL参数强制显示微信警告
+    if (import.meta.env.DEV && window.location.search.includes('test-wechat')) {
+      setIsWechat(true);
+    }
+    
     // 设置移动端适配
     if (!uiService.detectWeChat()) {
       uiService.setupMobileAdaptation();
+    }
+
+    // 开发环境下添加测试数据
+    if (import.meta.env.DEV) {
+      const mockMessages = createMockMessages();
+      setMessages(mockMessages);
+      console.log('开发环境：已加载测试数据');
     }
   }, []);
 
@@ -111,9 +231,20 @@ export function App() {
   // 微信浏览器警告
   if (isWechat) {
     return (
-      <div className="container">
-        <div className="wechat-warning">
-          ⚠️ 检测到微信访问，请使用外部浏览器打开本页面
+      <div className="wechat-warning-container">
+        <div className="wechat-warning-content">
+          <div className="warning-icon">🚫</div>
+          <h2>无法在微信中使用</h2>
+          <p>为了保证功能的正常使用和数据安全，请使用外部浏览器打开本页面</p>
+           
+          <div className="usage-tip">
+            <p>💡 <strong>如何使用：</strong></p>
+            <ol>
+              <li>点击右上角 <strong>「⋯」</strong> 菜单</li>
+              <li>选择 <strong>「在浏览器中打开」</strong></li>
+              <li>或复制链接到浏览器中访问</li>
+            </ol>
+          </div>
         </div>
       </div>
     );

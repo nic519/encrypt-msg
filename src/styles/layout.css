@@ -26,6 +26,128 @@
 }
 
 /* 警告提示 */
+.wechat-warning-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FFE0E0 0%, #FFF3E0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.wechat-warning-content {
+    background: white;
+    border-radius: var(--border-radius-large);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-xl);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #FFB3B3;
+}
+
+.warning-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-md);
+    display: block;
+}
+
+.wechat-warning-content h2 {
+    color: #D32F2F;
+    font-size: var(--font-size-xl);
+    margin: 0 0 var(--spacing-md) 0;
+    font-weight: 600;
+}
+
+.wechat-warning-content p {
+    color: #666;
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    margin: 0 0 var(--spacing-lg) 0;
+}
+
+
+.browser-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: center;
+}
+
+.browser-item {
+    display: inline-block;
+    background: white;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-small);
+    border: 1px solid #DEE2E6;
+    font-size: var(--font-size-sm);
+    color: #495057;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.usage-tip {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: #E3F2FD;
+    border-radius: var(--border-radius);
+    border: 1px solid #BBDEFB;
+    text-align: left;
+}
+
+.usage-tip p {
+    color: #1976D2;
+    font-size: var(--font-size-sm);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.usage-tip ol {
+    color: #424242;
+    font-size: var(--font-size-sm);
+    margin: 0;
+    padding-left: 1.2em;
+}
+
+.usage-tip li {
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.5;
+}
+
+.usage-tip strong {
+    color: #1976D2;
+    font-weight: 600;
+}
+
+/* 移动端适配 */
+@media (max-width: 767px) {
+    .wechat-warning-container {
+        padding: var(--spacing-md);
+    }
+    
+    .wechat-warning-content {
+        padding: var(--spacing-lg);
+    }
+    
+    .warning-icon {
+        font-size: 3rem;
+    }
+    
+    .wechat-warning-content h2 {
+        font-size: var(--font-size-lg);
+    }
+    
+    .browser-list {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .browser-item {
+        min-width: 120px;
+        text-align: center;
+    }
+}
+
+/* 保留原有的旧样式作为备用 */
 .wechat-warning {
     background: var(--danger-color);
     color: white;

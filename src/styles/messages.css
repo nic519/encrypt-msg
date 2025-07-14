@@ -37,18 +37,6 @@
     box-shadow: var(--bubble-right-shadow);
 }
 
-.right-bubble .message-content {
-    color: var(--bubble-right-color);
-}
-
-.right-bubble .message-label {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.right-bubble .message-time {
-    color: rgba(255, 255, 255, 0.7);
-}
-
 /* 消息内容 */
 .message {
     padding: var(--spacing-md) var(--spacing-lg);
@@ -60,6 +48,11 @@
 
 .message:not(:last-child) {
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* 右侧气泡中的消息分隔线 - 统一样式，只调整颜色 */
+.right-bubble .message:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .message-content {
@@ -74,9 +67,6 @@
     font-family: var(--font-family-mono);
     word-break: break-all;
     font-size: var(--font-size-xs);
-    background: rgba(255, 255, 255, 0.1);
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-small);
     margin-top: var(--spacing-sm);
 }
 
@@ -100,6 +90,15 @@
     font-size: var(--font-size-xs);
     color: var(--gray-400);
     margin-left: var(--spacing-sm);
+}
+
+/* 右侧气泡中的标签和时间颜色调整 */
+.right-bubble .message-label {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.right-bubble .message-time {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* 加密消息特殊样式 - 优化配色 */
@@ -126,18 +125,6 @@
 
 .right-bubble .encrypt-message .message-label {
     color: var(--encrypt-msg-label-color-right);
-}
-
-.right-bubble .encrypt-message .encrypted-content {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* 右侧气泡中的消息分隔线 */
-.right-bubble .message:not(:last-child) {
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
-    padding-bottom: var(--spacing-md);
-    margin-bottom: 0;
 }
 
 /* 气泡底部 */
