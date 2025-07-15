@@ -180,7 +180,7 @@
     overflow-y: auto;
     padding: var(--spacing-xl);
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
 }
 
 /* 标题样式 - 已移至标题栏 */
