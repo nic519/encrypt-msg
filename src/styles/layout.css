@@ -73,6 +73,7 @@
         height: calc(100vh - 32px);
         margin: 16px auto;
         max-width: 1200px;
+        min-width: 768px;
         border-radius: var(--border-radius);
         overflow: hidden;
     }
