@@ -1,11 +1,16 @@
-/* 输入框和按钮样式 */
+/* 输入框和按钮样式 - 极简设计 */
 
 .input-area {
     padding: var(--spacing-lg);
     background-color: var(--bg-secondary);
-    border-top: 1px solid var(--gray-200);
+    border-top: 1px solid rgba(0, 0, 0, 0.03);
     display: flex;
     flex-direction: column;
+    transition: background-color var(--transition-base);
+}
+
+[data-theme="dark"] .input-area {
+    border-top-color: rgba(255, 255, 255, 0.05);
 }
 
 .textarea-container {
@@ -16,21 +21,25 @@
 #message-input {
     width: 100%;
     padding: var(--spacing-lg);
-    padding-right: 40px; /* 为清除按钮留出空间 */
-    border: 2px solid var(--input-border);
-    border-radius: var(--border-radius-large);
+    padding-right: 40px;
+    border: none;
+    border-radius: var(--border-radius-small);
     font-size: var(--font-size-base);
     font-family: var(--font-family-base);
     resize: none;
     min-height: 60px;
-    background: var(--input-bg);
-    color: var(--gray-800);
-    transition: border-color var(--transition-base);
+    background: var(--input-fill-bg);
+    color: var(--input-text);
+    transition: all var(--transition-base);
+}
+
+[data-theme="dark"] #message-input {
+    background: var(--input-fill-bg);
 }
 
 #message-input:focus {
     outline: none;
-    border-color: var(--input-border-focus);
+    background: var(--input-fill-bg-focus);
 }
 
 #message-input::placeholder {
@@ -38,154 +47,120 @@
 }
 
 .input-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: var(--spacing-md);
-}
-
-.main-actions {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: var(--spacing-md);
-    flex: 1;
-    justify-content: flex-end;
+    margin-top: var(--spacing-md);
 }
 
 /* 按钮基础样式 */
 .action-btn {
-    padding: var(--spacing-md) var(--spacing-xl);
-    border: none;
-    border-radius: var(--border-radius-large);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: var(--border-radius-small);
     cursor: pointer;
     font-size: var(--font-size-base);
-    font-weight: bold;
+    font-weight: 500;
     transition: all var(--transition-base);
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-light);
+    gap: var(--spacing-sm);
 }
 
 .action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
+    transform: translateY(-1px);
 }
 
 .action-btn:active {
     transform: translateY(0);
 }
 
-.btn-icon {
-    margin-right: var(--spacing-sm);
-    font-size: var(--font-size-lg);
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
 }
 
-/* 解密按钮 - 占据更多空间 */
+/* 解密按钮 - 白色主题 */
 .decrypt-btn {
-    background: var(--btn-success-bg);
-    color: white;
-    flex: 3;
-    min-width: 180px;
+    background: var(--bubble-left-bg);
+    color: var(--bubble-left-text);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .decrypt-btn {
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 .decrypt-btn:hover {
-    background: var(--btn-success-hover);
+    opacity: 0.9;
 }
 
-/* 加密按钮 - 占据较少空间 */
+/* 加密按钮 - 蓝色主题 */
 .encrypt-btn {
-    background: var(--btn-primary-bg);
-    color: white;
-    flex: 2;
-    min-width: 120px;
+    background: var(--bubble-right-bg);
+    color: var(--bubble-right-text);
+    border: none;
 }
 
 .encrypt-btn:hover {
-    background: var(--btn-primary-hover);
+    opacity: 0.9;
 }
 
 /* 清除按钮 */
 .clear-btn {
     position: absolute;
-    right: var(--spacing-lg);
+    right: var(--spacing-md);
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: var(--gray-400);
-    font-size: var(--font-size-lg);
+    color: var(--text-tertiary);
     cursor: pointer;
     padding: var(--spacing-xs);
-    z-index: 2;
-    transition: color var(--transition-fast);
+    border-radius: var(--border-radius-small);
+    font-size: var(--font-size-lg);
+    transition: all var(--transition-fast);
+    opacity: 0.6;
 }
 
 .clear-btn:hover {
-    color: var(--danger-color);
+    opacity: 1;
+    color: var(--text-secondary);
 }
 
-/* 帮助按钮 */
-.help-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--gray-100);
-    color: var(--gray-500);
-    border: none;
-    cursor: pointer;
-    font-size: var(--font-size-sm);
-    transition: background-color var(--transition-base);
-    margin-right: var(--spacing-md);
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.help-btn:hover {
-    background: var(--gray-200);
-}
-
-/* 按钮文本 */
-.btn-text {
-    font-weight: normal;
-    font-size: var(--font-size-sm);
-}
-
-/* 按钮禁用状态 */
-.action-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.action-btn:disabled:hover {
-    transform: none;
-    box-shadow: var(--shadow-light);
-}
-
-/* 按钮加载状态 */
-.action-btn.loading {
-    position: relative;
-    color: transparent;
-}
-
-.action-btn.loading::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-@keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
+/* 移动端适配 */
+@media (max-width: 767px) {
+    .input-area {
+        padding: var(--spacing-md);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg-secondary);
+        border-top: 1px solid rgba(0, 0, 0, 0.03);
+        z-index: var(--z-fixed);
+    }
+    
+    [data-theme="dark"] .input-area {
+        border-top-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    #message-input {
+        min-height: 50px;
+        padding: var(--spacing-md);
+        padding-right: 35px;
+    }
+    
+    .input-actions {
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-sm);
+    }
+    
+    .action-btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+    }
 } 

@@ -62,15 +62,17 @@
 .shadow-medium { box-shadow: var(--shadow-medium); }
 .shadow-heavy { box-shadow: var(--shadow-heavy); }
 
-.text-primary { color: var(--primary-color); }
-.text-success { color: var(--success-color); }
-.text-danger { color: var(--danger-color); }
-.text-warning { color: var(--warning-color); }
-.text-muted { color: var(--gray-500); }
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary { color: var(--text-tertiary); }
+.text-success { color: var(--btn-success-bg); }
+.text-info { color: var(--btn-primary-bg); }
+.text-muted { color: var(--text-secondary); }
 
-.bg-primary { background-color: var(--primary-color); }
-.bg-success { background-color: var(--success-color); }
-.bg-danger { background-color: var(--danger-color); }
-.bg-warning { background-color: var(--warning-color); }
+.bg-primary { background-color: var(--bg-primary); }
+.bg-secondary { background-color: var(--bg-secondary); }
+.bg-tertiary { background-color: var(--bg-tertiary); }
+.bg-success { background-color: var(--btn-success-bg); }
+.bg-info { background-color: var(--btn-primary-bg); }
 .bg-light { background-color: var(--gray-50); }
 .bg-white { background-color: white; } 

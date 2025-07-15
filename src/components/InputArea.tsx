@@ -6,7 +6,6 @@ interface InputAreaProps {
   onInputChange: (text: string) => void;
   onEncrypt: () => void;
   onDecrypt: () => void;
-  onToggleTips: () => void;
   disabled?: boolean;
 }
 
@@ -18,7 +17,6 @@ export function InputArea({
   onInputChange, 
   onEncrypt, 
   onDecrypt, 
-  onToggleTips,
   disabled = false
 }: InputAreaProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -34,9 +32,16 @@ export function InputArea({
 
   const handleClearText = () => {
     onInputChange('');
-    if (textareaRef.current) {
-      textareaRef.current.focus();
+    textareaRef.current?.focus();
+  };
+
+  // 智能判断解密按钮文案
+  const getDecryptButtonText = () => {
+    const trimmedText = inputText.trim();
+    if (trimmedText) {
+      return '解密输入框内容';
     }
+    return '解密剪切板内容';
   };
 
   return (
@@ -45,40 +50,33 @@ export function InputArea({
         <textarea
           ref={textareaRef}
           id="message-input"
-          placeholder="输入要加密的文本..."
           value={inputText}
           onInput={(e) => onInputChange((e.target as HTMLTextAreaElement).value)}
           onKeyDown={handleKeyDown}
+          placeholder="输入文本..."
           disabled={disabled}
         />
+        
         {inputText && (
           <button 
             className="clear-btn" 
             onClick={handleClearText}
-            title="清空文本"
+            type="button"
+            aria-label="清除文本"
           >
-            ✖️
+            <i className="bi bi-x-circle-fill"></i>
           </button>
         )}
       </div>
       
       <div className="input-actions">
-        <button 
-          className="help-btn" 
-          onClick={onToggleTips}
-          title="显示/隐藏帮助信息"
-        >
-          ❓
-        </button>
-        
-        <div className="main-actions">
           <button 
             className="action-btn decrypt-btn" 
             onClick={onDecrypt}
             disabled={disabled}
           >
-            <span className="btn-icon">🔓</span>
-            <span className="btn-text">粘贴并解密</span>
+          <i className="bi bi-unlock-fill"></i>
+          <span>{getDecryptButtonText()}</span>
           </button>
           
           <button 
@@ -86,10 +84,9 @@ export function InputArea({
             onClick={onEncrypt}
             disabled={disabled || !inputText.trim()}
           >
-            <span className="btn-icon">🔒</span>
-            <span className="btn-text">加密</span>
+          <i className="bi bi-lock-fill"></i>
+          <span>加密</span>
           </button>
-        </div>
       </div>
     </div>
   );

@@ -15,13 +15,6 @@ export function MessageList({ messages, onCopySuccess }: MessageListProps) {
 
   return (
     <div className="messages-container" id="messages-area">
-      {/* 标题消息 */}
-      <div className="title-bubble">
-        <div className="title-content">
-          <h1>🔐 文本加密工具</h1>
-        </div>
-      </div>
-
       {/* 消息列表 */}
       {validMessages.map((message) => (
         <MessageBubble 
