@@ -42,7 +42,7 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
   };
 
   // 格式化文本
-  const formatText = (text: string, type: string) => {
+  const formatText = (text: string) => {
     return text.replace(/\n/g, '<br>');
   };
 
@@ -67,10 +67,7 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
     return type !== 'encrypted' && text.length > 1000;
   };
 
-  // 判断是否显示展开状态
-  const shouldShowExpanded = (text: string, type: string, index: number) => {
-    return shouldShowExpandButton(text, type) && expandedStates[index];
-  };
+
 
   const formatEncryptedText = (text: string) => {
     const prefix = text.startsWith('AES-GCM:') ? text.substring(8) : text;
@@ -109,7 +106,7 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
             <div key={index} className="message">
           <div 
                 className="message-content"
-            dangerouslySetInnerHTML={{ __html: formatText(getDisplayText(contentItem.text, contentItem.type, index), contentItem.type) }}
+            dangerouslySetInnerHTML={{ __html: formatText(getDisplayText(contentItem.text, contentItem.type, index)) }}
           />
           {shouldShowExpandButton(contentItem.text, contentItem.type) && (
             <div className="expand-control">
