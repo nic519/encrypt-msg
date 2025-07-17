@@ -220,7 +220,16 @@ export function App() {
       }
 
       if (textToDecrypt) {
-        // const plaintext = await cryptoService.decrypt(textToDecrypt);
+        // 判断内容是不是网址，如果是网址，则进一步判断是否有encrypt参数,有的话，只解密encrypt后面的内容
+        const isUrl = textToDecrypt.startsWith('http');
+        if (isUrl) {
+          const url = new URL(textToDecrypt);
+          const encryptParam = url.searchParams.get('encrypt');
+          if (encryptParam) {
+            textToDecrypt = encryptParam;
+          }
+        }
+        // 开始解密
         const plaintext = quickDecrypt(textToDecrypt);
         const newMessage = messageService.createDecryptMessage(textToDecrypt, plaintext);
         setMessages(prev => messageService.addMessage(prev, newMessage));
