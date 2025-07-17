@@ -5,6 +5,7 @@ import { MessageList } from './MessageList';
 import { InputArea } from './InputArea';
 import { TipsPanel } from './TipsPanel';
 import { Notification } from './Notification';
+import { quickDecrypt, quickEncrypt } from '@/utils/lz-unified-crypto';
 
 // 开发环境测试数据
 const createMockMessages = (): Message[] => {
@@ -170,7 +171,8 @@ export function App() {
 
     setIsLoading(true);
     try {
-      const encryptedText = await cryptoService.encrypt(text);
+      // const encryptedText = await cryptoService.encrypt(text);
+      const encryptedText = quickEncrypt(text);
       const newMessage = messageService.createEncryptMessage(text, encryptedText);
       setMessages(prev => messageService.addMessage(prev, newMessage));
       setInputText('');
@@ -198,7 +200,8 @@ export function App() {
       }
 
       if (textToDecrypt) {
-        const plaintext = await cryptoService.decrypt(textToDecrypt);
+        // const plaintext = await cryptoService.decrypt(textToDecrypt);
+        const plaintext = quickDecrypt(textToDecrypt);
         const newMessage = messageService.createDecryptMessage(textToDecrypt, plaintext);
         setMessages(prev => messageService.addMessage(prev, newMessage));
         
