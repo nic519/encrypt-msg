@@ -1,14 +1,6 @@
 import { Message } from "./message"
 
 /**
- * 加密服务接口
- */
-export interface ICryptoService {
-    encrypt(plaintext: string): Promise<string>
-    decrypt(ciphertext: string): Promise<string>
-}
-
-/**
  * 消息服务接口
  */
 export interface IMessageService {

@@ -32,11 +32,7 @@ export function TipsPanel({ show, onClose }: TipsPanelProps) {
           <li>
               <i className="bi bi-shield-check-fill"></i>
               完全本地运行，数据不上传
-            </li>
-            <li>
-              <i className="bi bi-arrow-repeat"></i>
-              每次加密结果不同
-            </li>
+            </li> 
             <li>
               <i className="bi bi-moon-fill"></i>
               自动跟随系统主题

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Message } from '@/types';
-import { cryptoService, messageService, uiService, themeService } from '@/services';
+import { messageService, uiService, themeService } from '@/services';
 import { MessageList } from './MessageList';
 import { InputArea } from './InputArea';
 import { TipsPanel } from './TipsPanel';
@@ -190,8 +190,7 @@ export function App() {
     if (!text) return;
 
     setIsLoading(true);
-    try {
-      // const encryptedText = await cryptoService.encrypt(text);
+    try { 
       const encryptedText = quickEncrypt(text);
       const newMessage = messageService.createEncryptMessage(text, encryptedText);
       setMessages(prev => messageService.addMessage(prev, newMessage));
