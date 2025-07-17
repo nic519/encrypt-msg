@@ -86,7 +86,7 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
         <div 
           className="encrypted-attachment left-attachment"
           onClick={(e) => handleCopy(message.content[1].text, e as any)}
-          title="点击复制密文"
+          title="点击复制解密内容"
         >
           <span className="encrypted-text">
             {formatEncryptedText(message.content[0].text)}
