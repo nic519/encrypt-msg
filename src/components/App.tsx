@@ -145,11 +145,31 @@ export function App() {
       uiService.setupMobileAdaptation();
     }
 
-    // 开发环境下添加测试数据
-    if (import.meta.env.DEV) {
-      const mockMessages = createMockMessages();
-      setMessages(mockMessages);
-      console.log('开发环境：已加载测试数据');
+    // 检查URL参数中的encrypt参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const encryptParam = urlParams.get('encrypt');
+    
+    if (encryptParam) {
+      try {
+        const decryptedText = quickDecrypt(encryptParam);
+        const newMessage = messageService.createDecryptMessage(encryptParam, decryptedText);
+        setMessages([newMessage]);
+        console.log('URL参数解密成功');
+        
+        // 清除URL参数（可选，避免刷新时重复处理）
+        // const newUrl = window.location.origin + window.location.pathname;
+        // window.history.replaceState({}, document.title, newUrl);
+      } catch (error) {
+        console.error('URL参数解密失败:', error);
+        alert('URL参数解密失败: ' + (error as Error).message);
+      }
+    } else {
+      // 只有在没有URL参数时才加载开发环境测试数据
+      if (import.meta.env.DEV) {
+        const mockMessages = createMockMessages();
+        setMessages(mockMessages);
+        console.log('开发环境：已加载测试数据');
+      }
     }
   }, []);
 
