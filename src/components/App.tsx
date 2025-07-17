@@ -147,7 +147,7 @@ export function App() {
 
     // 检查URL参数中的encrypt参数
     const urlParams = new URLSearchParams(window.location.search);
-    const encryptParam = urlParams.get('encrypt');
+    const encryptParam = urlParams.get('x');
     
     if (encryptParam) {
       try {
@@ -223,7 +223,7 @@ export function App() {
         const isUrl = textToDecrypt.startsWith('http');
         if (isUrl) {
           const url = new URL(textToDecrypt);
-          const encryptParam = url.searchParams.get('encrypt');
+          const encryptParam = url.searchParams.get('x');
           if (encryptParam) {
             textToDecrypt = encryptParam;
           }

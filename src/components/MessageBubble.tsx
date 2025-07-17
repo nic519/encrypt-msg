@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import { Message, MessageContent } from '@/types';
+import { copyEncryptedContent } from '@/utils/copy-content';
 
 interface MessageBubbleProps {
   message: Message;
@@ -114,7 +115,7 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
                 className="expand-btn"
                 onClick={() => toggleExpanded(index)}
               >
-                    {expandedStates[index] ? '收起' : '展开'}
+                    {expandedStates[index] ? '收起' : '展开全文'}
               </button>
             </div>
           )}
@@ -127,7 +128,7 @@ export function MessageBubble({ message, onCopySuccess }: MessageBubbleProps) {
       {message.type === 'right' && message.content.length > 1 && (
         <div 
           className="encrypted-attachment right-attachment"
-          onClick={(e) => handleCopy(message.content[1].text, e as any)}
+          onClick={(e) => handleCopy(copyEncryptedContent(message.content[1].text), e as any)}
           title="点击复制密文"
         >
           <span className="encrypted-text">
